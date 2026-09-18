@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>NOCTYX V5.0 — Report Panel</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;800;900&family=Rajdhani:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+<!-- ===== NEON BACKGROUND ===== -->
+<div class="neon-bg">
+    <div class="grid"></div>
+    <div class="glow glow-1"></div>
+    <div class="glow glow-2"></div>
+    <div class="glow glow-3"></div>
+</div>
+
+<!-- ============================================================ -->
+<!-- ===== AUTH SCREEN (LOGIN / REGISTER) ===== -->
+<!-- ============================================================ -->
+<div class="auth-wrapper" id="authWrapper">
+    <div class="auth-box">
+        
+        <!-- Logo -->
+        <div class="auth-logo">
+            <span class="logo-icon">◈</span>
+            <h1>NOCTYX <span class="ver">V5.0</span></h1>
+            <p>Report Panel — Neon Edition</p>
+        </div>
+
+        <!-- Tabs -->
+        <div class="auth-tabs">
+            <button class="auth-tab active" data-tab="login">LOGIN</button>
+            <button class="auth-tab" data-tab="register">REGISTER</button>
+        </div>
+
+        <!-- ===== LOGIN FORM ===== -->
+        <form class="auth-form active" id="loginForm">
+            <div class="form-group">
+                <label>USERNAME</label>
+                <input type="text" id="loginUsername" placeholder="Masukkan username" autocomplete="off" />
+            </div>
+            <div class="form-group">
+                <label>PASSWORD</label>
+                <input type="password" id="loginPassword" placeholder="Masukkan password" />
+            </div>
+            <div class="form-group">
+                <label>CAPTCHA VERIFICATION</label>
+                <div class="captcha-box">
+                    <div class="captcha-code" id="loginCaptchaCode">----</div>
+                    <button type="button" class="captcha-refresh" id="loginCaptchaRefresh" title="Refresh">↻</button>
+                </div>
+                <input type="text" id="loginCaptcha" placeholder="Masukkan kode captcha" autocomplete="off" maxlength="4" />
+            </div>
+            <div class="error-msg" id="loginError"></div>
+            <button type="submit" class="action-btn">🔓 LOGIN</button>
+            <p class="auth-switch">
+                Belum punya akun? <a href="#" id="switchToRegister">Register sekarang</a>
+            </p>
+        </form>
+
+        <!-- ===== REGISTER FORM ===== -->
+        <form class="auth-form" id="registerForm">
+            <div class="form-group">
+                <label>USERNAME</label>
+                <input type="text" id="regUsername" placeholder="Minimal 3 karakter" autocomplete="off" />
+            </div>
+            <div class="form-group">
+                <label>EMAIL</label>
+                <input type="email" id="regEmail" placeholder="email@gmail.com" autocomplete="off" />
+            </div>
+            <div class="form-group">
+                <label>PASSWORD</label>
+                <input type="password" id="regPassword" placeholder="Minimal 6 karakter" />
+            </div>
+            <div class="form-group">
+                <label>KONFIRMASI PASSWORD</label>
+                <input type="password" id="regPassword2" placeholder="Ulangi password" />
+            </div>
+            <div class="form-group">
+                <label>CAPTCHA VERIFICATION</label>
+                <div class="captcha-box">
+                    <div class="captcha-code" id="regCaptchaCode">----</div>
+                    <button type="button" class="captcha-refresh" id="regCaptchaRefresh" title="Refresh">↻</button>
+                </div>
+                <input type="text" id="regCaptcha" placeholder="Masukkan kode captcha" autocomplete="off" maxlength="4" />
+            </div>
+            <div class="error-msg" id="regError"></div>
+            <button type="submit" class="action-btn">📝 REGISTER</button>
+            <p class="auth-switch">
+                Sudah punya akun? <a href="#" id="switchToLogin">Login di sini</a>
+            </p>
+        </form>
+
+        <!-- Footer -->
+        <div class="auth-footer">
+            <span class="dot-green"></span> Secure Authentication Active
+        </div>
+
+    </div>
+</div>
+
+<!-- ============================================================ -->
+<!-- ===== DASHBOARD (HANYA MUNCUL SETELAH LOGIN) ===== -->
+<!-- ============================================================ -->
+<div class="container" id="dashboard" style="display:none;">
+
+    <!-- ===== HEADER ===== -->
+    <header class="header">
+        <div class="logo">
+            <span class="logo-icon">◈</span>
+            <div class="logo-text">
+                <h1>NOCTYX <span class="ver">V5.0</span></h1>
+                <p>Report Panel — Neon Edition</p>
+            </div>
+        </div>
+        <div class="header-right">
+            <div class="status-badge">
+                <span class="dot"></span> ONLINE
+            </div>
+            <button class="logout-btn" id="logoutBtn" title="Logout">⏻</button>
+        </div>
+    </header>
+
+    <!-- ===== INFO PANEL ===== -->
+    <section class="info-panel">
+        <div class="info-header">
+            <span class="bracket">╭</span>
+            <span class="title">INFO PENGGUNA</span>
+            <span class="bracket">╮</span>
+        </div>
+        <div class="info-grid">
+            <div class="info-item">
+                <span class="label">USER</span>
+                <span class="value" id="userName">Guest</span>
+            </div>
+            <div class="info-item">
+                <span class="label">ID</span>
+                <span class="value" id="userId">-</span>
+            </div>
+            <div class="info-item">
+                <span class="label">ROLE</span>
+                <span class="value role-user" id="userRole">USER</span>
+            </div>
+            <div class="info-item">
+                <span class="label">REPORT</span>
+                <span class="value" id="reportCount">0 email</span>
+            </div>
+            <div class="info-item">
+                <span class="label">EMAIL</span>
+                <span class="value" id="emailCount">0 terdaftar</span>
+            </div>
+            <div class="info-item">
+                <span class="label">LIMIT</span>
+                <span class="value" id="userLimit">5/5</span>
+            </div>
+            <div class="info-item full">
+                <span class="label">STATUS</span>
+                <span class="value status-verified">✅ Terverifikasi</span>
+            </div>
+        </div>
+        <div class="info-footer">
+            <span class="dot-green"></span> Unlimited Report Aktif!
+        </div>
+    </section>
+
+    <!-- ===== MENU BUTTONS ===== -->
+    <section class="menu-grid">
+        <button class="neon-btn btn-cyan" data-menu="gmail">
+            <span class="btn-icon">➕</span>
+            <span class="btn-text">Gmail Manager</span>
+        </button>
+        <button class="neon-btn btn-red" data-menu="report">
+            <span class="btn-icon">⚡</span>
+            <span class="btn-text">Gas Report</span>
+        </button>
+        <button class="neon-btn btn-purple" data-menu="progress">
+            <span class="btn-icon">📊</span>
+            <span class="btn-text">Progress Report</span>
+        </button>
+        <button class="neon-btn btn-orange" data-menu="stats">
+            <span class="btn-icon">📈</span>
+            <span class="btn-text">Statistik Email</span>
+        </button>
+        <button class="neon-btn btn-pink" data-menu="session">
+            <span class="btn-icon">🔑</span>
+            <span class="btn-text">Sesi</span>
+        </button>
+        <button class="neon-btn btn-yellow" data-menu="role">
+            <span class="btn-icon">🆙</span>
+            <span class="btn-text">Up Role</span>
+        </button>
+        <button class="neon-btn btn-blue" data-menu="limit">
+            <span class="btn-icon">📋</span>
+            <span class="btn-text">My Limit</span>
+        </button>
+        <button class="neon-btn btn-green" data-menu="donasi">
+            <span class="btn-icon">💚</span>
+            <span class="btn-text">Donasi</span>
+        </button>
+        <button class="neon-btn btn-teal" data-menu="qris">
+            <span class="btn-icon">🚀</span>
+            <span class="btn-text">QRIS</span>
+        </button>
+        <button class="neon-btn btn-gold" data-menu="owner">
+            <span class="btn-icon">👑</span>
+            <span class="btn-text">Chat Owner</span>
+        </button>
+        <button class="neon-btn btn-silver" data-menu="akun">
+            <span class="btn-icon">👤</span>
+            <span class="btn-text">Cek Akun</span>
+        </button>
+        <button class="neon-btn btn-lime" data-menu="referral">
+            <span class="btn-icon">🎁</span>
+            <span class="btn-text">Referral</span>
+        </button>
+    </section>
+
+    <!-- ===== WORKSPACE ===== -->
+    <section class="workspace" id="workspace">
+        <div class="workspace-placeholder">
+            <div class="placeholder-icon">◈</div>
+            <p>Pilih menu di atas untuk memulai</p>
+        </div>
+    </section>
+
+    <!-- ===== LOG CONSOLE ===== -->
+    <section class="console" id="console">
+        <div class="console-header">
+            <span class="console-dot red"></span>
+            <span class="console-dot yellow"></span>
+            <span class="console-dot green"></span>
+            <span class="console-title">system.log</span>
+            <button class="console-clear" id="clearLog">CLEAR</button>
+        </div>
+        <div class="console-body" id="consoleBody">
+            <div class="log-line info">[SYSTEM] NOCTYX V5.0 initialized...</div>
+        </div>
+    </section>
+
+    <!-- ===== FOOTER ===== -->
+    <footer class="footer">
+        <p>NOCTYX V5.0 &copy; 2026 — Report Panel</p>
+        <p class="footer-sub">Neon Edition • Build 5.0.1</p>
+    </footer>
+
+</div>
+
+<!-- ===== TOAST ===== -->
+<div class="toast" id="toast">
+    <span class="toast-icon" id="toastIcon">✓</span>
+    <span class="toast-msg" id="toastMsg">Berhasil!</span>
+</div>
+
+<script src="script.js"></script>
+</body>
+</html>
