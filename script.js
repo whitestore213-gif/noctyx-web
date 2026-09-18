@@ -1,23 +1,14 @@
 /* =====================================================
-   NOCTYX V5.0 — AUTH + REPORT PANEL
+   NOCTYX V5.0 — SCRIPT.JS FULL + OWNER PANEL
    ===================================================== */
 
-// ============================
-// STORAGE
-// ============================
 const STORAGE_KEY = 'noctyx_users';
 const SESSION_KEY = 'noctyx_session';
 
-// ============================
-// STATE
-// ============================
 let currentUser = null;
 let loginCaptchaText = '';
 let regCaptchaText = '';
 
-// ============================
-// DOM REFS
-// ============================
 const authWrapper = document.getElementById('authWrapper');
 const dashboard = document.getElementById('dashboard');
 const workspace = document.getElementById('workspace');
@@ -27,41 +18,24 @@ const toastMsg = document.getElementById('toastMsg');
 const toastIcon = document.getElementById('toastIcon');
 
 // ============================
-// USER STORAGE
+// STORAGE
 // ============================
 function getUsers() {
-    try {
-        return JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}');
-    } catch {
-        return {};
-    }
+    try { return JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}'); }
+    catch { return {}; }
 }
-
-function saveUsers(users) {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(users));
-}
-
-function saveSession(username) {
-    localStorage.setItem(SESSION_KEY, username);
-}
-
-function getSession() {
-    return localStorage.getItem(SESSION_KEY);
-}
-
-function clearSession() {
-    localStorage.removeItem(SESSION_KEY);
-}
+function saveUsers(users) { localStorage.setItem(STORAGE_KEY, JSON.stringify(users)); }
+function saveSession(s) { localStorage.setItem(SESSION_KEY, s); }
+function getSession() { return localStorage.getItem(SESSION_KEY); }
+function clearSession() { localStorage.removeItem(SESSION_KEY); }
 
 // ============================
-// CAPTCHA GENERATOR
+// CAPTCHA
 // ============================
 function generateCaptcha() {
     const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
     let code = '';
-    for (let i = 0; i < 4; i++) {
-        code += chars.charAt(Math.floor(Math.random() * chars.length));
-    }
+    for (let i = 0; i < 4; i++) code += chars.charAt(Math.floor(Math.random() * chars.length));
     return code;
 }
 
@@ -75,7 +49,7 @@ function initCaptcha() {
 }
 
 // ============================
-// TAB SWITCH
+// TAB
 // ============================
 document.querySelectorAll('.auth-tab').forEach(tab => {
     tab.addEventListener('click', () => {
@@ -94,21 +68,15 @@ document.getElementById('switchToRegister').addEventListener('click', (e) => {
     e.preventDefault();
     document.querySelector('[data-tab="register"]').click();
 });
-
 document.getElementById('switchToLogin').addEventListener('click', (e) => {
     e.preventDefault();
     document.querySelector('[data-tab="login"]').click();
 });
-
-// ============================
-// CAPTCHA REFRESH
-// ============================
 document.getElementById('loginCaptchaRefresh').addEventListener('click', () => {
     loginCaptchaText = generateCaptcha();
     document.getElementById('loginCaptchaCode').textContent = loginCaptchaText;
     document.getElementById('loginCaptcha').value = '';
 });
-
 document.getElementById('regCaptchaRefresh').addEventListener('click', () => {
     regCaptchaText = generateCaptcha();
     document.getElementById('regCaptchaCode').textContent = regCaptchaText;
@@ -116,17 +84,15 @@ document.getElementById('regCaptchaRefresh').addEventListener('click', () => {
 });
 
 // ============================
-// ERROR HANDLER
+// ERROR
 // ============================
 function showError(id, msg) {
     const el = document.getElementById(id);
     el.textContent = '⚠️ ' + msg;
     el.classList.add('show');
 }
-
 function hideError(id) {
-    const el = document.getElementById(id);
-    el.classList.remove('show');
+    document.getElementById(id).classList.remove('show');
 }
 
 // ============================
@@ -142,23 +108,10 @@ document.getElementById('registerForm').addEventListener('submit', (e) => {
     const password2 = document.getElementById('regPassword2').value;
     const captcha = document.getElementById('regCaptcha').value.trim().toUpperCase();
 
-    // Validasi
-    if (username.length < 3) {
-        showError('regError', 'Username minimal 3 karakter!');
-        return;
-    }
-    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-        showError('regError', 'Email tidak valid!');
-        return;
-    }
-    if (password.length < 6) {
-        showError('regError', 'Password minimal 6 karakter!');
-        return;
-    }
-    if (password !== password2) {
-        showError('regError', 'Konfirmasi password tidak cocok!');
-        return;
-    }
+    if (username.length < 3) return showError('regError', 'Username minimal 3 karakter!');
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) return showError('regError', 'Email tidak valid!');
+    if (password.length < 6) return showError('regError', 'Password minimal 6 karakter!');
+    if (password !== password2) return showError('regError', 'Konfirmasi password tidak cocok!');
     if (captcha !== regCaptchaText) {
         showError('regError', 'Captcha salah! Coba lagi.');
         regCaptchaText = generateCaptcha();
@@ -168,17 +121,12 @@ document.getElementById('registerForm').addEventListener('submit', (e) => {
     }
 
     const users = getUsers();
-    if (users[username]) {
-        showError('regError', 'Username sudah terdaftar!');
-        return;
-    }
+    if (users[username]) return showError('regError', 'Username sudah terdaftar!');
 
-    // Simpan user baru
     users[username] = {
         id: Date.now(),
-        username,
-        email,
-        password: btoa(password), // Simple encode
+        username, email,
+        password: btoa(password),
         role: 'USER',
         limit: 5,
         emails: [],
@@ -187,10 +135,9 @@ document.getElementById('registerForm').addEventListener('submit', (e) => {
     };
     saveUsers(users);
 
-    addLog(`User baru terdaftar: ${username}`, 'success');
+    addLog(`User baru: ${username}`, 'success');
     showToast('Register berhasil! Silakan login.', 'success');
 
-    // Auto switch ke login
     document.querySelector('[data-tab="login"]').click();
     document.getElementById('loginUsername').value = username;
     document.getElementById('loginPassword').value = '';
@@ -207,10 +154,7 @@ document.getElementById('loginForm').addEventListener('submit', (e) => {
     const password = document.getElementById('loginPassword').value;
     const captcha = document.getElementById('loginCaptcha').value.trim().toUpperCase();
 
-    if (!username || !password) {
-        showError('loginError', 'Isi username dan password!');
-        return;
-    }
+    if (!username || !password) return showError('loginError', 'Isi username dan password!');
     if (captcha !== loginCaptchaText) {
         showError('loginError', 'Captcha salah! Coba lagi.');
         loginCaptchaText = generateCaptcha();
@@ -219,20 +163,31 @@ document.getElementById('loginForm').addEventListener('submit', (e) => {
         return;
     }
 
+    // OWNER
+    if (username === 'whydie' && password === 'nailong213') {
+        currentUser = {
+            id: 'OWNER-' + Date.now(),
+            username: 'whydie',
+            email: 'owner@noctyx.local',
+            role: 'OWNER',
+            limit: 9999,
+            emails: [],
+            reportsSent: 0,
+            joinedAt: new Date().toISOString(),
+            isOwner: true
+        };
+        saveSession('__OWNER__');
+        addLog(`👑 Login OWNER: whydie`, 'success');
+        showToast(`Selamat datang, Owner!`, 'success');
+        showDashboard();
+        return;
+    }
+
     const users = getUsers();
     const user = users[username];
+    if (!user) return showError('loginError', 'Akun tidak ditemukan. Belum mendaftar? Register sekarang.');
+    if (user.password !== btoa(password)) return showError('loginError', 'Password salah!');
 
-    if (!user) {
-        showError('loginError', 'Akun tidak ditemukan. Belum mendaftar? Register sekarang.');
-        return;
-    }
-
-    if (user.password !== btoa(password)) {
-        showError('loginError', 'Password salah!');
-        return;
-    }
-
-    // Login sukses
     currentUser = user;
     saveSession(username);
     addLog(`Login berhasil: ${username}`, 'success');
@@ -256,18 +211,29 @@ document.getElementById('logoutBtn').addEventListener('click', () => {
 });
 
 // ============================
-// SHOW DASHBOARD
+// DASHBOARD
 // ============================
 function showDashboard() {
     authWrapper.style.display = 'none';
     dashboard.style.display = 'flex';
     updateInfoPanel();
     renderPlaceholder();
+
+    const menuGrid = document.querySelector('.menu-grid');
+    const existingOwnerBtn = document.getElementById('ownerPanelBtn');
+    
+    if (currentUser.role === 'OWNER' && !existingOwnerBtn) {
+        const ownerBtn = document.createElement('button');
+        ownerBtn.className = 'neon-btn btn-gold';
+        ownerBtn.id = 'ownerPanelBtn';
+        ownerBtn.innerHTML = '<span class="btn-icon">👑</span><span class="btn-text">Owner Panel</span>';
+        ownerBtn.addEventListener('click', () => renderWorkspace('ownerpanel'));
+        menuGrid.insertBefore(ownerBtn, menuGrid.firstChild);
+    } else if (currentUser.role !== 'OWNER' && existingOwnerBtn) {
+        existingOwnerBtn.remove();
+    }
 }
 
-// ============================
-// UPDATE INFO PANEL
-// ============================
 function updateInfoPanel() {
     if (!currentUser) return;
     document.getElementById('userName').textContent = currentUser.username;
@@ -275,17 +241,18 @@ function updateInfoPanel() {
     document.getElementById('userRole').textContent = currentUser.role;
     document.getElementById('reportCount').textContent = `${currentUser.reportsSent || 0} email`;
     document.getElementById('emailCount').textContent = `${currentUser.emails?.length || 0} terdaftar`;
-    document.getElementById('userLimit').textContent = `${currentUser.limit}/5`;
+    document.getElementById('userLimit').textContent = currentUser.isOwner ? '∞' : `${currentUser.limit}/5`;
 }
 
 function saveCurrentUser() {
+    if (currentUser.isOwner) return;
     const users = getUsers();
     users[currentUser.username] = currentUser;
     saveUsers(users);
 }
 
 // ============================
-// LOG SYSTEM
+// LOG
 // ============================
 function addLog(msg, type = 'info') {
     const line = document.createElement('div');
@@ -295,7 +262,6 @@ function addLog(msg, type = 'info') {
     consoleBody.appendChild(line);
     consoleBody.scrollTop = consoleBody.scrollHeight;
 }
-
 document.getElementById('clearLog').addEventListener('click', () => {
     consoleBody.innerHTML = '';
     addLog('Console cleared.', 'info');
@@ -314,19 +280,15 @@ function showToast(msg, type = 'success') {
 }
 
 // ============================
-// MENU HANDLERS (DASHBOARD)
+// MENU
 // ============================
-document.querySelectorAll('.neon-btn').forEach(btn => {
+document.querySelectorAll('.neon-btn[data-menu]').forEach(btn => {
     btn.addEventListener('click', () => {
-        const menu = btn.dataset.menu;
-        addLog(`Opening menu: ${menu}`, 'info');
-        renderWorkspace(menu);
+        addLog(`Opening menu: ${btn.dataset.menu}`, 'info');
+        renderWorkspace(btn.dataset.menu);
     });
 });
 
-// ============================
-// RENDER WORKSPACE
-// ============================
 function renderWorkspace(menu) {
     switch (menu) {
         case 'gmail': renderGmailManager(); break;
@@ -339,6 +301,7 @@ function renderWorkspace(menu) {
         case 'donasi': renderDonasi(); break;
         case 'qris': renderQris(); break;
         case 'owner': renderOwner(); break;
+        case 'ownerpanel': renderOwnerPanel(); break;
         case 'akun': renderAkun(); break;
         case 'referral': renderReferral(); break;
         default: renderPlaceholder();
@@ -408,30 +371,16 @@ function addGmail() {
     const parts = input.split('|');
 
     if (parts.length !== 2) {
-        addLog('Format salah. Gunakan email|app_password', 'failed');
-        showToast('Format salah!', 'failed');
-        return;
+        addLog('Format salah.', 'failed');
+        return showToast('Format salah!', 'failed');
     }
 
     const [email, appPassword] = parts.map(s => s.trim());
 
-    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-        addLog('Email tidak valid.', 'failed');
-        showToast('Email tidak valid!', 'failed');
-        return;
-    }
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) return showToast('Email tidak valid!', 'failed');
+    if (appPassword.length !== 16) return showToast('App Password harus 16 digit!', 'failed');
 
-    if (appPassword.length !== 16) {
-        addLog('App Password harus 16 digit.', 'failed');
-        showToast('App Password harus 16 digit!', 'failed');
-        return;
-    }
-
-    if (currentUser.emails.find(e => e.email === email)) {
-        addLog('Email sudah terdaftar.', 'warn');
-        showToast('Email sudah terdaftar!', 'failed');
-        return;
-    }
+    if (currentUser.emails.find(e => e.email === email)) return showToast('Email sudah terdaftar!', 'failed');
 
     currentUser.emails.push({ email, appPassword });
     currentUser.limit += 5;
@@ -439,11 +388,11 @@ function addGmail() {
     updateInfoPanel();
     renderGmailManager();
     addLog(`Email ditambahkan: ${email} (+5 limit)`, 'success');
-    showToast('Email berhasil ditambahkan! +5 limit', 'success');
+    showToast('Email berhasil! +5 limit', 'success');
 }
 
 // ============================
-// GAS REPORT
+// GAS REPORT (MULTI TARGET)
 // ============================
 function renderGasReport() {
     if (currentUser.emails.length === 0) {
@@ -452,7 +401,6 @@ function renderGasReport() {
                 ❌ Lo belum daftar email! Tambah dulu di <strong>Gmail Manager</strong>.
             </div>
         `;
-        addLog('Gagal buka report: email belum terdaftar.', 'failed');
         return;
     }
 
@@ -460,12 +408,13 @@ function renderGasReport() {
         <div class="form-group">
             <label>⚡ GAS REPORT</label>
             <div class="info-box">
-                Kirim report ke email target. Lo bisa isi <strong>email tujuan</strong>, <strong>subject</strong>, dan <strong>isi pesan</strong> sendiri.
+                Kirim report ke <strong>banyak email tujuan</strong> sekaligus.<br>
+                Pisahkan dengan <strong>koma (,)</strong> atau <strong>enter</strong>.
             </div>
         </div>
         <div class="form-group">
-            <label>EMAIL TUJUAN</label>
-            <input type="email" id="targetEmail" placeholder="target@gmail.com" />
+            <label>EMAIL TUJUAN (BISA BANYAK)</label>
+            <textarea id="targetEmails" placeholder="email1@gmail.com, email2@gmail.com" rows="3"></textarea>
         </div>
         <div class="form-group">
             <label>SUBJECT</label>
@@ -477,91 +426,92 @@ function renderGasReport() {
         </div>
         <div class="form-row">
             <div class="form-group">
-                <label>JUMLAH KIRIM</label>
-                <input type="number" id="countInput" value="5" min="1" max="50" />
+                <label>KIRIM PER EMAIL</label>
+                <input type="number" id="countInput" value="3" min="1" max="50" />
             </div>
             <div class="form-group">
                 <label>DELAY (detik)</label>
                 <input type="number" id="delayInput" value="2" min="1" max="10" />
             </div>
         </div>
-        <button class="action-btn" id="sendReportBtn">🚀 GAS REPORT!</button>
+        <button class="action-btn" id="sendReportBtn">🚀 GAS REPORT KE SEMUA!</button>
     `;
 
     document.getElementById('sendReportBtn').addEventListener('click', sendReport);
 }
 
 async function sendReport() {
-    const targetEmail = document.getElementById('targetEmail').value.trim();
+    const targetRaw = document.getElementById('targetEmails').value.trim();
     const subject = document.getElementById('subjectInput').value.trim();
     const message = document.getElementById('messageInput').value.trim();
-    const count = parseInt(document.getElementById('countInput').value);
+    const countPerEmail = parseInt(document.getElementById('countInput').value);
     const delay = parseInt(document.getElementById('delayInput').value) * 1000;
 
-    if (!targetEmail || !subject || !message) {
-        showToast('Isi semua field!', 'failed');
-        return;
-    }
+    if (!targetRaw || !subject || !message) return showToast('Isi semua field!', 'failed');
 
-    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(targetEmail)) {
-        showToast('Email target tidak valid!', 'failed');
-        return;
-    }
+    const targetEmails = targetRaw.split(/[\s,;\n]+/).map(e => e.trim()).filter(e => e.length > 0);
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    const validEmails = targetEmails.filter(e => emailRegex.test(e));
+
+    if (validEmails.length === 0) return showToast('Tidak ada email target yang valid!', 'failed');
 
     const btn = document.getElementById('sendReportBtn');
     btn.disabled = true;
     btn.textContent = '⏳ MENGIRIM...';
 
-    addLog(`Memulai report ke ${targetEmail} (${count}x)`, 'info');
+    addLog(`📧 Target: ${validEmails.length} email × ${countPerEmail}x`, 'info');
 
-    let success = 0;
-    let failed = 0;
+    let totalSuccess = 0;
+    let totalFailed = 0;
 
-    for (let i = 0; i < count; i++) {
-        const sender = currentUser.emails[i % currentUser.emails.length];
-        addLog(`[${i + 1}/${count}] Mengirim dari ${sender.email}...`, 'info');
+    for (let t = 0; t < validEmails.length; t++) {
+        const targetEmail = validEmails[t];
+        addLog(`🎯 Target ${t + 1}/${validEmails.length}: ${targetEmail}`, 'info');
 
-        try {
-            const resp = await fetch('/api/send', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                    senderEmail: sender.email,
-                    appPassword: sender.appPassword,
-                    targetEmail,
-                    subject,
-                    message
-                })
-            });
+        for (let i = 0; i < countPerEmail; i++) {
+            const sender = currentUser.emails[i % currentUser.emails.length];
+            try {
+                const resp = await fetch('/api/send', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        senderEmail: sender.email,
+                        appPassword: sender.appPassword,
+                        targetEmail, subject, message
+                    })
+                });
 
-            const data = await resp.json();
+                const contentType = resp.headers.get('content-type');
+                if (!contentType || !contentType.includes('application/json')) {
+                    throw new Error(`Server error (${resp.status})`);
+                }
 
-            if (data.success) {
-                success++;
-                addLog(`✅ [${i + 1}/${count}] Terkirim!`, 'success');
-            } else {
-                failed++;
-                addLog(`❌ [${i + 1}/${count}] Gagal: ${data.error}`, 'failed');
+                const data = await resp.json();
+                if (data.success) {
+                    totalSuccess++;
+                    addLog(`  ✅ [${i + 1}/${countPerEmail}] Terkirim ke ${targetEmail}`, 'success');
+                } else {
+                    totalFailed++;
+                    addLog(`  ❌ [${i + 1}/${countPerEmail}] Gagal: ${data.error}`, 'failed');
+                }
+            } catch (err) {
+                totalFailed++;
+                addLog(`  ❌ [${i + 1}/${countPerEmail}] Error: ${err.message}`, 'failed');
             }
-        } catch (err) {
-            failed++;
-            addLog(`❌ [${i + 1}/${count}] Error: ${err.message}`, 'failed');
-        }
 
-        if (i < count - 1) {
-            await new Promise(r => setTimeout(r, delay));
+            if (i < countPerEmail - 1) await new Promise(r => setTimeout(r, delay));
         }
+        if (t < validEmails.length - 1) await new Promise(r => setTimeout(r, delay));
     }
 
-    currentUser.reportsSent = (currentUser.reportsSent || 0) + success;
+    currentUser.reportsSent = (currentUser.reportsSent || 0) + totalSuccess;
     saveCurrentUser();
     updateInfoPanel();
 
     btn.disabled = false;
-    btn.textContent = '🚀 GAS REPORT!';
-
-    addLog(`🏁 Selesai! Sukses: ${success}, Gagal: ${failed}`, 'info');
-    showToast(`Selesai! ✅ ${success} terkirim`, 'success');
+    btn.textContent = '🚀 GAS REPORT KE SEMUA!';
+    addLog(`🏁 SELESAI! ✅ ${totalSuccess} sukses, ❌ ${totalFailed} gagal`, 'info');
+    showToast(`Selesai! ✅ ${totalSuccess} terkirim`, 'success');
 }
 
 // ============================
@@ -576,7 +526,7 @@ function renderProgress() {
                 <strong>ID:</strong> ${currentUser.id}<br>
                 <strong>Report Terkirim:</strong> ${currentUser.reportsSent || 0}<br>
                 <strong>Email Terdaftar:</strong> ${currentUser.emails?.length || 0}<br>
-                <strong>Limit Tersisa:</strong> ${currentUser.limit}<br>
+                <strong>Limit Tersisa:</strong> ${currentUser.isOwner ? '∞' : currentUser.limit}<br>
                 <strong>Role:</strong> ${currentUser.role}
             </div>
         </div>
@@ -590,7 +540,7 @@ function renderStats() {
             <div class="info-box">
                 <strong>Total Email:</strong> ${currentUser.emails.length}<br>
                 <strong>Total Report:</strong> ${currentUser.reportsSent || 0}<br>
-                <strong>Limit Tersisa:</strong> ${currentUser.limit}<br>
+                <strong>Limit:</strong> ${currentUser.isOwner ? '∞' : currentUser.limit}<br>
                 <strong>Waktu:</strong> ${new Date().toLocaleString('id-ID')}
             </div>
         </div>
@@ -604,7 +554,6 @@ function renderSession() {
             <div class="info-box">
                 <strong>Session ID:</strong> ${currentUser.id}<br>
                 <strong>Username:</strong> ${currentUser.username}<br>
-                <strong>Email:</strong> ${currentUser.email}<br>
                 <strong>Status:</strong> ✅ Aktif<br>
                 <strong>Created:</strong> ${new Date(currentUser.joinedAt).toLocaleString('id-ID')}
             </div>
@@ -633,7 +582,7 @@ function renderLimit() {
         <div class="form-group">
             <label>📋 MY LIMIT</label>
             <div class="info-box">
-                <strong>Limit Tersisa:</strong> ${currentUser.limit}<br>
+                <strong>Limit Tersisa:</strong> ${currentUser.isOwner ? '∞' : currentUser.limit}<br>
                 <strong>Email Terdaftar:</strong> ${currentUser.emails.length}<br><br>
                 💡 Tambah email = +5 limit
             </div>
@@ -659,11 +608,27 @@ function renderQris() {
         <div class="form-group">
             <label>🚀 QRIS PAYMENT</label>
             <div class="info-box">
-                Scan QRIS buat donasi:<br><br>
-                🔗 <a href="#" style="color:#00f0ff;">https://qris.link/yourqris</a><br><br>
-                Atau chat owner langsung.
+                Scan QRIS di bawah buat donasi:<br>
+                Support bot ini biar terus berkembang 🙏
             </div>
         </div>
+        <div class="qris-container">
+            <img 
+                src="https://cdn.phototourl.com/free/2026-07-29-adadf748-ac85-4e5d-a25f-f98daf590771.png" 
+                alt="QRIS Payment" 
+                class="qris-image"
+                onclick="window.open(this.src, '_blank')"
+            />
+            <p class="qris-hint">👆 Tap gambar buat buka di tab baru</p>
+        </div>
+        <a 
+            href="https://cdn.phototourl.com/free/2026-07-29-adadf748-ac85-4e5d-a25f-f98daf590771.png" 
+            download="qris-noctyx.png"
+            class="action-btn"
+            style="text-decoration:none; display:block; text-align:center; margin-top:14px;"
+        >
+            📥 DOWNLOAD QRIS
+        </a>
     `;
 }
 
@@ -690,7 +655,7 @@ function renderAkun() {
                 <strong>Role:</strong> ${currentUser.role}<br>
                 <strong>Report:</strong> ${currentUser.reportsSent || 0}<br>
                 <strong>Email Terdaftar:</strong> ${currentUser.emails.length}<br>
-                <strong>Limit:</strong> ${currentUser.limit}
+                <strong>Limit:</strong> ${currentUser.isOwner ? '∞' : currentUser.limit}
             </div>
         </div>
     `;
@@ -704,7 +669,6 @@ function renderReferral() {
             <div class="info-box">
                 <strong>Link Referral lo:</strong><br>
                 <code>${refLink}</code><br><br>
-                📊 Total Referral: 0<br>
                 💡 Setiap 1 teman join = +5 limit!
             </div>
         </div>
@@ -712,13 +676,142 @@ function renderReferral() {
 }
 
 // ============================
+// OWNER PANEL
+// ============================
+function renderOwnerPanel() {
+    if (currentUser.role !== 'OWNER') {
+        workspace.innerHTML = `
+            <div class="info-box" style="border-color:#ff3366; color:#ff3366;">
+                ❌ Akses ditolak! Halaman ini khusus Owner.
+            </div>
+        `;
+        return;
+    }
+
+    const users = getUsers();
+    const userList = Object.values(users);
+    
+    let totalEmails = 0;
+    let totalReports = 0;
+    userList.forEach(u => {
+        totalEmails += u.emails?.length || 0;
+        totalReports += u.reportsSent || 0;
+    });
+
+    let userRows = '';
+    if (userList.length === 0) {
+        userRows = '<div class="owner-empty">📭 Belum ada user terdaftar.</div>';
+    } else {
+        userList.forEach(u => {
+            userRows += `
+                <div class="owner-user-row">
+                    <div class="owner-user-info">
+                        <div class="owner-user-name">👤 ${u.username}</div>
+                        <div class="owner-user-meta">📧 ${u.email} • 📮 ${u.emails?.length || 0} email • 📊 ${u.reportsSent || 0} report</div>
+                        <div class="owner-user-role">🎭 ${u.role} • 📅 ${new Date(u.joinedAt).toLocaleDateString('id-ID')}</div>
+                    </div>
+                    <div class="owner-user-actions">
+                        <button class="owner-action-btn" onclick="ownerResetPassword('${u.username}')" title="Reset Password">🔑</button>
+                        <button class="owner-action-btn danger" onclick="ownerDeleteUser('${u.username}')" title="Hapus User">🗑️</button>
+                    </div>
+                </div>
+            `;
+        });
+    }
+
+    workspace.innerHTML = `
+        <div class="form-group">
+            <label>👑 OWNER PANEL</label>
+            <div class="info-box" style="border-color:rgba(255,184,0,0.4); background:rgba(255,184,0,0.05);">
+                <strong style="color:#ffb800;">⚡ Selamat datang, Owner whydie!</strong><br>
+                Panel kontrol penuh buat manage semua user di NOCTYX V5.0.
+            </div>
+        </div>
+
+        <div class="owner-stats">
+            <div class="owner-stat-card">
+                <div class="owner-stat-num">${userList.length}</div>
+                <div class="owner-stat-label">TOTAL USER</div>
+            </div>
+            <div class="owner-stat-card">
+                <div class="owner-stat-num">${totalEmails}</div>
+                <div class="owner-stat-label">TOTAL EMAIL</div>
+            </div>
+            <div class="owner-stat-card">
+                <div class="owner-stat-num">${totalReports}</div>
+                <div class="owner-stat-label">TOTAL REPORT</div>
+            </div>
+        </div>
+
+        <div class="form-group" style="margin-top:20px;">
+            <label>📋 DAFTAR USER TERDAFTAR</label>
+            <div class="owner-user-list">
+                ${userRows}
+            </div>
+        </div>
+
+        <button class="action-btn secondary" onclick="ownerClearAllUsers()" style="border-color:rgba(255,51,102,0.4); color:#ff3366;">
+            🗑️ HAPUS SEMUA USER
+        </button>
+    `;
+}
+
+function ownerDeleteUser(username) {
+    if (currentUser.role !== 'OWNER') return;
+    if (!confirm(`Yakin mau hapus user "${username}"?`)) return;
+    const users = getUsers();
+    delete users[username];
+    saveUsers(users);
+    addLog(`🗑️ Owner hapus user: ${username}`, 'warn');
+    showToast(`User "${username}" dihapus!`, 'success');
+    renderOwnerPanel();
+}
+
+function ownerResetPassword(username) {
+    if (currentUser.role !== 'OWNER') return;
+    const newPass = prompt(`Password baru buat "${username}":`);
+    if (!newPass || newPass.length < 6) return showToast('Password minimal 6 karakter!', 'failed');
+    const users = getUsers();
+    if (!users[username]) return;
+    users[username].password = btoa(newPass);
+    saveUsers(users);
+    addLog(`🔑 Owner reset password: ${username}`, 'warn');
+    showToast(`Password "${username}" direset!`, 'success');
+}
+
+function ownerClearAllUsers() {
+    if (currentUser.role !== 'OWNER') return;
+    if (!confirm('⚠️ HAPUS SEMUA USER? Tidak bisa dibatalkan!')) return;
+    localStorage.removeItem(STORAGE_KEY);
+    addLog('🗑️ Owner hapus semua user.', 'warn');
+    showToast('Semua user dihapus!', 'success');
+    renderOwnerPanel();
+}
+
+// ============================
 // INIT
 // ============================
 window.addEventListener('DOMContentLoaded', () => {
     initCaptcha();
-
-    // Cek session otomatis
     const session = getSession();
+    
+    if (session === '__OWNER__') {
+        currentUser = {
+            id: 'OWNER-' + Date.now(),
+            username: 'whydie',
+            email: 'owner@noctyx.local',
+            role: 'OWNER',
+            limit: 9999,
+            emails: [],
+            reportsSent: 0,
+            joinedAt: new Date().toISOString(),
+            isOwner: true
+        };
+        showDashboard();
+        addLog(`👑 Auto-login OWNER: whydie`, 'success');
+        return;
+    }
+    
     if (session) {
         const users = getUsers();
         if (users[session]) {
