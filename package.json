@@ -1,0 +1,8 @@
+{
+  "name": "noctyx-web",
+  "version": "5.0.0",
+  "description": "NOCTYX V5.0 - Neon Report Panel",
+  "dependencies": {
+    "nodemailer": "^6.9.7"
+  }
+}
