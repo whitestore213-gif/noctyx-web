@@ -11,22 +11,17 @@
 
 <div class="auth-view" id="authView">
   <div class="auth-card">
-
-    <!-- VIDEO EYE -->
     <div class="eye-video">
       <video autoplay loop muted playsinline>
         <source src="eye.mp4" type="video/mp4">
       </video>
     </div>
-
     <h1>Welcome to Whydie Pall</h1>
     <p class="subtitle">Please log in or register to continue</p>
-
     <div class="auth-actions">
       <button class="btn-main" id="showLogin">Login</button>
       <button class="btn-outline" id="showRegister">Register</button>
     </div>
-
     <div class="contact-us">
       <p class="label">Contact Us</p>
       <div class="icons">
@@ -38,11 +33,9 @@
         </a>
       </div>
     </div>
-
     <p class="copyright">© 2026 Whydie Pall</p>
   </div>
 
-  <!-- LOGIN MODAL -->
   <div class="modal" id="loginModal">
     <div class="modal-box">
       <button class="modal-close" data-close>&times;</button>
@@ -60,7 +53,6 @@
     </div>
   </div>
 
-  <!-- REGISTER MODAL -->
   <div class="modal" id="registerModal">
     <div class="modal-box">
       <button class="modal-close" data-close>&times;</button>
@@ -127,6 +119,7 @@
     <button class="menu-btn" data-menu="donasi">Donasi</button>
     <button class="menu-btn" data-menu="qris">QRIS</button>
     <button class="menu-btn" data-menu="owner">Chat Owner</button>
+    <button class="menu-btn owner-only" data-menu="ownerpanel" style="display:none">Owner Panel</button>
   </section>
 
   <section class="workspace" id="workspace">
@@ -159,4 +152,4 @@
 
 <script src="script.js"></script>
 </body>
-        </html>
+</html>
