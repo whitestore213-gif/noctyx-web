@@ -342,21 +342,45 @@
             <button type="button" class="btn-close" id="closeRegBtn">&larr; Kembali ke menu utama</button>
         </div>
 
-        <!-- DASHBOARD PANEL CARD -->
+        <!-- DASHBOARD PANEL LENGKAP -->
         <div class="form-card" id="dashboardCard">
             <div class="neon-diamond"></div>
             
             <div class="brand-header">
-                <div class="brand-title">WHYDIE PALL <span>V1.0</span></div>
-                <div class="brand-subtitle">Dashboard Panel</div>
+                <div class="brand-title">WHYDIE PALL <span>PANEL</span></div>
+                <div class="brand-subtitle">Selamat Datang, <span id="dashUser" style="color: #00d2ff; font-weight: bold;">User</span>!</div>
             </div>
 
-            <div style="text-align: center; margin-bottom: 20px; font-family: 'Inter', sans-serif;">
-                <p style="font-size: 14px; color: #ffffff;">Selamat Datang, <span id="dashUser" style="color: #00d2ff; font-weight: bold;">User</span>!</p>
-                <p style="font-size: 11px; color: #00ff88; margin-top: 6px;">Status: Active</p>
+            <!-- Ringkasan Statistik -->
+            <div style="display: flex; gap: 10px; width: 100%; margin-bottom: 15px;">
+                <div style="flex: 1; background: #090a0d; border: 1px solid rgba(255,255,255,0.08); padding: 10px; border-radius: 8px; text-align: center;">
+                    <span style="font-size: 10px; color: #8a94a6;">STATUS</span>
+                    <p style="font-size: 12px; color: #00ff88; font-weight: bold; margin-top: 4px;">Active</p>
+                </div>
+                <div style="flex: 1; background: #090a0d; border: 1px solid rgba(255,255,255,0.08); padding: 10px; border-radius: 8px; text-align: center;">
+                    <span style="font-size: 10px; color: #8a94a6;">TOTAL REPORT</span>
+                    <p style="font-size: 12px; color: #00d2ff; font-weight: bold; margin-top: 4px;">128</p>
+                </div>
             </div>
 
-            <button type="button" class="submit-btn" style="background: #ff4d4d; color: #ffffff;" id="logoutBtn">LOGOUT</button>
+            <!-- Form Submit Report -->
+            <div class="form-group">
+                <label class="form-label">Target Account / URL</label>
+                <input type="text" class="form-input" placeholder="https://tiktok.com/@target">
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">Report Category</label>
+                <select class="form-input" style="background: #090a0d; color: #fff;">
+                    <option>Spam / Fake Account</option>
+                    <option>Harassment / Bullying</option>
+                    <option>Inappropriate Content</option>
+                </select>
+            </div>
+
+            <button type="button" class="submit-btn" style="margin-bottom: 10px;" onclick="alert('Report submitted successfully!')">SEND REPORT</button>
+
+            <button type="button" class="submit-btn" style="background: #ff4d4d; color: #ffffff; box-shadow: 0 0 15px rgba(255, 77, 77, 0.3);" id="logoutBtn">LOGOUT</button>
         </div>
 
         <!-- Contact Section -->
@@ -418,7 +442,7 @@
             // Logika Login
             document.getElementById('submitLoginBtn').addEventListener('click', () => {
                 const user = document.getElementById('loginUsername').value.trim();
-                dashUser.innerText = user ? user : 'User';
+                dashUser.innerText = user ? user : 'whydie';
                 loginFormCard.classList.remove('active');
                 dashboardCard.classList.add('active');
             });
@@ -426,7 +450,7 @@
             // Logika Register
             document.getElementById('submitRegBtn').addEventListener('click', () => {
                 const user = document.getElementById('regUsername').value.trim();
-                dashUser.innerText = user ? user : 'User';
+                dashUser.innerText = user ? user : 'whydie';
                 registerFormCard.classList.remove('active');
                 dashboardCard.classList.add('active');
             });
