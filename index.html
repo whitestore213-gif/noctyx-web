@@ -8,265 +8,8 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <!-- Google Font Monospace & Inter -->
     <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-    
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Share Tech Mono', monospace;
-        }
-
-        body {
-            background-color: #000000;
-            color: #d8d8d8;
-            min-height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            padding: 20px 0;
-        }
-
-        .main-container {
-            width: 90%;
-            max-width: 380px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 20px;
-        }
-
-        /* Banner Video Minimalis */
-        .video-card {
-            width: 100%;
-            height: 170px;
-            border-radius: 20px;
-            border: 1px solid rgba(255, 255, 255, 0.12);
-            position: relative;
-            overflow: hidden;
-            background: #0a0a0a;
-        }
-
-        .card-video {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            display: block;
-        }
-
-        /* Text Welcome */
-        .text-section {
-            text-align: center;
-            margin: 2px 0;
-        }
-
-        .text-section h2 {
-            font-size: 20px;
-            color: #ffffff;
-            letter-spacing: 1px;
-            font-weight: normal;
-        }
-
-        .text-section p {
-            font-size: 11px;
-            color: #777777;
-            margin-top: 6px;
-        }
-
-        /* Menu Simple */
-        .menu-box {
-            width: 100%;
-            border: 1px solid rgba(255, 255, 255, 0.12);
-            border-radius: 20px;
-            padding: 20px;
-            display: flex;
-            flex-direction: column;
-            gap: 15px;
-            background: #0a0a0a;
-        }
-
-        .btn-menu {
-            width: 100%;
-            padding: 12px;
-            border-radius: 10px;
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            background: transparent;
-            color: #ffffff;
-            font-size: 14px;
-            letter-spacing: 1px;
-            cursor: pointer;
-            text-align: center;
-            transition: all 0.3s ease;
-        }
-
-        .btn-menu:hover {
-            background: rgba(255, 255, 255, 0.1);
-        }
-
-        /* Form Card */
-        .form-card {
-            display: none;
-            width: 100%;
-            background: #12141a;
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 20px;
-            padding: 24px 20px;
-            flex-direction: column;
-            align-items: center;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.8);
-            font-family: 'Inter', sans-serif;
-            animation: fadeIn 0.4s ease-in-out;
-        }
-
-        .form-card.active {
-            display: flex;
-        }
-
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(-10px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        .neon-diamond {
-            width: 14px;
-            height: 14px;
-            background: #00d2ff;
-            transform: rotate(45deg);
-            box-shadow: 0 0 12px #00d2ff;
-            margin-bottom: 12px;
-        }
-
-        .brand-header {
-            text-align: center;
-            margin-bottom: 20px;
-            font-family: 'Inter', sans-serif;
-        }
-
-        .brand-title {
-            font-size: 18px;
-            font-weight: 700;
-            color: #ffffff;
-            letter-spacing: 1px;
-        }
-
-        .brand-title span {
-            color: #00d2ff;
-            font-size: 12px;
-            margin-left: 4px;
-        }
-
-        .brand-subtitle {
-            font-size: 11px;
-            color: #6c757d;
-            margin-top: 4px;
-        }
-
-        .form-group {
-            width: 100%;
-            display: flex;
-            flex-direction: column;
-            gap: 6px;
-            margin-bottom: 14px;
-            text-align: left;
-        }
-
-        .form-label {
-            font-size: 10px;
-            font-weight: 600;
-            color: #8a94a6;
-            letter-spacing: 0.5px;
-            text-transform: uppercase;
-            font-family: 'Inter', sans-serif;
-        }
-
-        .form-input {
-            width: 100%;
-            background: #090a0d;
-            border: 1px solid rgba(255, 255, 255, 0.08);
-            border-radius: 8px;
-            padding: 11px;
-            color: #ffffff;
-            font-size: 12px;
-            outline: none;
-            font-family: 'Inter', sans-serif;
-        }
-
-        .form-input:focus {
-            border-color: #00d2ff;
-        }
-
-        .submit-btn {
-            width: 100%;
-            padding: 12px;
-            background: #00d2ff;
-            border: none;
-            border-radius: 8px;
-            color: #000000;
-            font-size: 12px;
-            font-weight: 700;
-            letter-spacing: 1px;
-            cursor: pointer;
-            margin-top: 6px;
-            box-shadow: 0 0 15px rgba(0, 210, 255, 0.3);
-            font-family: 'Inter', sans-serif;
-        }
-
-        .btn-close {
-            background: transparent;
-            border: none;
-            color: #6c757d;
-            font-size: 11px;
-            margin-top: 14px;
-            cursor: pointer;
-            text-decoration: underline;
-            font-family: 'Inter', sans-serif;
-        }
-
-        /* Contact Section */
-        .contact-box {
-            width: 100%;
-            border: 1px solid rgba(255, 255, 255, 0.12);
-            border-radius: 20px;
-            padding: 18px 15px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 15px;
-            background: #0a0a0a;
-        }
-
-        .contact-box span {
-            font-size: 12px;
-            color: #aaaaaa;
-        }
-
-        .social-icons {
-            display: flex;
-            gap: 15px;
-        }
-
-        .icon-circle {
-            width: 42px;
-            height: 42px;
-            background-color: #ffffff;
-            border-radius: 50%;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            color: #0088cc;
-            font-size: 20px;
-            text-decoration: none;
-        }
-
-        .icon-circle.tiktok {
-            color: #000000;
-        }
-
-        .copyright {
-            font-size: 10px;
-            color: #555555;
-        }
-    </style>
+    <!-- Style CSS Utama -->
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
@@ -285,7 +28,7 @@
             <p>Please log in or register to continue</p>
         </div>
 
-        <!-- Menu Simple Utama -->
+        <!-- Menu Utama Simple -->
         <div class="menu-box" id="menuBox">
             <button class="btn-menu" onclick="openLoginForm()">Login</button>
             <button class="btn-menu" onclick="openRegisterForm()">Register</button>
@@ -302,15 +45,15 @@
 
             <div class="form-group">
                 <label class="form-label">Username</label>
-                <input type="text" class="form-input" placeholder="Masukkan username">
+                <input type="text" id="loginUsername" class="form-input" placeholder="Masukkan username">
             </div>
 
             <div class="form-group">
                 <label class="form-label">Password</label>
-                <input type="password" class="form-input" placeholder="Masukkan password">
+                <input type="password" id="loginPassword" class="form-input" placeholder="Masukkan password">
             </div>
 
-            <button type="button" class="submit-btn">LOGIN</button>
+            <button type="button" class="submit-btn" onclick="handleLogin()">LOGIN</button>
             <button type="button" class="btn-close" onclick="closeAllForms()">&larr; Kembali ke menu utama</button>
         </div>
 
@@ -325,21 +68,61 @@
 
             <div class="form-group">
                 <label class="form-label">Username</label>
-                <input type="text" class="form-input" placeholder="Masukkan username">
+                <input type="text" id="regUsername" class="form-input" placeholder="Masukkan username">
             </div>
 
             <div class="form-group">
                 <label class="form-label">Password</label>
-                <input type="password" class="form-input" placeholder="Masukkan password">
+                <input type="password" id="regPassword" class="form-input" placeholder="Masukkan password">
             </div>
 
             <div class="form-group">
                 <label class="form-label">Confirm Password</label>
-                <input type="password" class="form-input" placeholder="Ulangi password">
+                <input type="password" id="regConfirmPassword" class="form-input" placeholder="Ulangi password">
             </div>
 
-            <button type="button" class="submit-btn">REGISTER</button>
+            <button type="button" class="submit-btn" onclick="handleRegister()">REGISTER</button>
             <button type="button" class="btn-close" onclick="closeAllForms()">&larr; Kembali ke menu utama</button>
+        </div>
+
+        <!-- DASHBOARD PANEL LENGKAP -->
+        <div class="dashboard-card" id="dashboardCard">
+            <div class="neon-diamond"></div>
+            <div class="brand-header">
+                <div class="brand-title">WHYDIE PALL <span>PANEL</span></div>
+                <div class="brand-subtitle">Welcome back, <span id="userDisplay" style="color:#00d2ff; font-weight: bold;">User</span>!</div>
+            </div>
+
+            <!-- Ringkasan Statistik -->
+            <div class="dashboard-stats" style="display: flex; gap: 10px; width: 100%; margin-bottom: 15px;">
+                <div style="flex: 1; background: #090a0d; border: 1px solid rgba(255,255,255,0.08); padding: 10px; border-radius: 8px; text-align: center;">
+                    <span style="font-size: 10px; color: #8a94a6;">STATUS</span>
+                    <p style="font-size: 12px; color: #00ff88; font-weight: bold; margin-top: 4px;">ACTIVE</p>
+                </div>
+                <div style="flex: 1; background: #090a0d; border: 1px solid rgba(255,255,255,0.08); padding: 10px; border-radius: 8px; text-align: center;">
+                    <span style="font-size: 10px; color: #8a94a6;">TOTAL REPORT</span>
+                    <p style="font-size: 12px; color: #00d2ff; font-weight: bold; margin-top: 4px;">128</p>
+                </div>
+            </div>
+
+            <!-- Form Submit Report -->
+            <div class="form-group">
+                <label class="form-label">Target Account / URL</label>
+                <input type="text" class="form-input" placeholder="https://tiktok.com/@target">
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">Report Category</label>
+                <select class="form-input" style="background: #090a0d; color: #fff;">
+                    <option>Spam / Fake Account</option>
+                    <option>Harassment / Bullying</option>
+                    <option>Inappropriate Content</option>
+                </select>
+            </div>
+
+            <button type="button" class="submit-btn" style="margin-bottom: 15px;" onclick="alert('Report submitted successfully!')">SEND REPORT</button>
+
+            <button type="button" class="logout-btn" onclick="handleLogout()">LOGOUT</button>
         </div>
 
         <!-- Contact Section -->
@@ -360,29 +143,8 @@
 
     </div>
 
-    <!-- Script Kontrol -->
-    <script>
-        function openLoginForm() {
-            document.getElementById('menuBox').style.display = 'none';
-            document.getElementById('welcomeText').style.display = 'none';
-            document.getElementById('registerFormCard').classList.remove('active');
-            document.getElementById('loginFormCard').classList.add('active');
-        }
-
-        function openRegisterForm() {
-            document.getElementById('menuBox').style.display = 'none';
-            document.getElementById('welcomeText').style.display = 'none';
-            document.getElementById('loginFormCard').classList.remove('active');
-            document.getElementById('registerFormCard').classList.add('active');
-        }
-
-        function closeAllForms() {
-            document.getElementById('loginFormCard').classList.remove('active');
-            document.getElementById('registerFormCard').classList.remove('active');
-            document.getElementById('menuBox').style.display = 'flex';
-            document.getElementById('welcomeText').style.display = 'block';
-        }
-    </script>
+    <!-- Script JavaScript Utama -->
+    <script src="script.js"></script>
 
 </body>
 </html>
