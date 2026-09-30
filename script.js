@@ -1,5 +1,5 @@
 /* =====================================================
-   WHYDIE PALL V1.0 — SCRIPT.JS (FULL FUNCTIONALITY)
+   NOCTYX V5.0 — SCRIPT.JS FULL + FIX DASHBOARD DISPLAY
    ===================================================== */
 
 const STORAGE_KEY = 'noctyx_users';
@@ -9,7 +9,6 @@ let currentUser = null;
 let loginCaptchaText = '';
 let regCaptchaText = '';
 
-// Element References
 const authWrapper = document.getElementById('authWrapper');
 const dashboard = document.getElementById('dashboard');
 const workspace = document.getElementById('workspace');
@@ -19,41 +18,24 @@ const toastMsg = document.getElementById('toastMsg');
 const toastIcon = document.getElementById('toastIcon');
 
 // ============================
-// LOCAL STORAGE MANAGEMENT
+// STORAGE
 // ============================
 function getUsers() {
-    try { 
-        return JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}'); 
-    } catch { 
-        return {}; 
-    }
+    try { return JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}'); }
+    catch { return {}; }
 }
-
-function saveUsers(users) { 
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(users)); 
-}
-
-function saveSession(sessionData) { 
-    localStorage.setItem(SESSION_KEY, sessionData); 
-}
-
-function getSession() { 
-    return localStorage.getItem(SESSION_KEY); 
-}
-
-function clearSession() { 
-    localStorage.removeItem(SESSION_KEY); 
-}
+function saveUsers(users) { localStorage.setItem(STORAGE_KEY, JSON.stringify(users)); }
+function saveSession(s) { localStorage.setItem(SESSION_KEY, s); }
+function getSession() { return localStorage.getItem(SESSION_KEY); }
+function clearSession() { localStorage.removeItem(SESSION_KEY); }
 
 // ============================
-// CAPTCHA SYSTEM
+// CAPTCHA
 // ============================
 function generateCaptcha() {
     const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
     let code = '';
-    for (let i = 0; i < 4; i++) {
-        code += chars.charAt(Math.floor(Math.random() * chars.length));
-    }
+    for (let i = 0; i < 4; i++) code += chars.charAt(Math.floor(Math.random() * chars.length));
     return code;
 }
 
@@ -61,75 +43,46 @@ function initCaptcha() {
     loginCaptchaText = generateCaptcha();
     regCaptchaText = generateCaptcha();
     
-    const loginCaptchaEl = document.getElementById('loginCaptchaCode');
-    const regCaptchaEl = document.getElementById('regCaptchaCode');
-    const loginCaptchaInput = document.getElementById('loginCaptcha');
-    const regCaptchaInput = document.getElementById('regCaptcha');
+    const loginCodeEl = document.getElementById('loginCaptchaCode');
+    const regCodeEl = document.getElementById('regCaptchaCode');
+    const loginInput = document.getElementById('loginCaptcha');
+    const regInput = document.getElementById('regCaptcha');
 
-    if (loginCaptchaEl) loginCaptchaEl.textContent = loginCaptchaText;
-    if (regCaptchaEl) regCaptchaEl.textContent = regCaptchaText;
-    if (loginCaptchaInput) loginCaptchaInput.value = '';
-    if (regCaptchaInput) regCaptchaInput.value = '';
+    if (loginCodeEl) loginCodeEl.textContent = loginCaptchaText;
+    if (regCodeEl) regCodeEl.textContent = regCaptchaText;
+    if (loginInput) loginInput.value = '';
+    if (regInput) regInput.value = '';
 }
 
 // ============================
-// TAB & MODAL NAVIGATION
+// TAB NAVIGATION
 // ============================
-function openLoginForm() {
-    document.getElementById('menuBox').style.display = 'none';
-    document.getElementById('welcomeText').style.display = 'none';
-    document.getElementById('registerFormCard').classList.remove('active');
-    document.getElementById('dashboardCard').classList.remove('active');
-    document.getElementById('loginFormCard').classList.add('active');
-}
-
-function openRegisterForm() {
-    document.getElementById('menuBox').style.display = 'none';
-    document.getElementById('welcomeText').style.display = 'none';
-    document.getElementById('loginFormCard').classList.remove('active');
-    document.getElementById('dashboardCard').classList.remove('active');
-    document.getElementById('registerFormCard').classList.add('active');
-}
-
-function closeAllForms() {
-    document.getElementById('loginFormCard').classList.remove('active');
-    document.getElementById('registerFormCard').classList.remove('active');
-    document.getElementById('dashboardCard').classList.remove('active');
-    document.getElementById('menuBox').style.display = 'flex';
-    document.getElementById('welcomeText').style.display = 'block';
-}
-
 document.querySelectorAll('.auth-tab').forEach(tab => {
     tab.addEventListener('click', () => {
         const target = tab.dataset.tab;
         document.querySelectorAll('.auth-tab').forEach(t => t.classList.remove('active'));
         document.querySelectorAll('.auth-form').forEach(f => f.classList.remove('active'));
         tab.classList.add('active');
-        
-        const targetForm = document.getElementById(target + 'Form');
-        if (targetForm) targetForm.classList.add('active');
-        
+        document.getElementById(target + 'Form').classList.add('active');
         hideError('loginError');
         hideError('regError');
         initCaptcha();
     });
 });
 
-const switchReg = document.getElementById('switchToRegister');
-if (switchReg) {
-    switchReg.addEventListener('click', (e) => {
+const switchToRegBtn = document.getElementById('switchToRegister');
+if (switchToRegBtn) {
+    switchToRegBtn.addEventListener('click', (e) => {
         e.preventDefault();
-        const tab = document.querySelector('[data-tab="register"]');
-        if (tab) tab.click();
+        document.querySelector('[data-tab="register"]')?.click();
     });
 }
 
-const switchLog = document.getElementById('switchToLogin');
-if (switchLog) {
-    switchLog.addEventListener('click', (e) => {
+const switchToLogBtn = document.getElementById('switchToLogin');
+if (switchToLogBtn) {
+    switchToLogBtn.addEventListener('click', (e) => {
         e.preventDefault();
-        const tab = document.querySelector('[data-tab="login"]');
-        if (tab) tab.click();
+        document.querySelector('[data-tab="login"]')?.click();
     });
 }
 
@@ -157,46 +110,21 @@ if (regRefresh) {
 function showError(id, msg) {
     const el = document.getElementById(id);
     if (el) {
-        el.textContent = '[ERROR] ' + msg;
+        el.textContent = msg;
         el.classList.add('show');
     }
 }
-
 function hideError(id) {
     const el = document.getElementById(id);
     if (el) el.classList.remove('show');
 }
 
 // ============================
-// AUTHENTICATION LOGIC
+// REGISTER
 // ============================
-function handleAuth(type) {
-    let username = "";
-    if (type === 'login') {
-        const input = document.getElementById('loginUsername');
-        username = input ? input.value : "";
-    } else {
-        const input = document.getElementById('regUsername');
-        username = input ? input.value : "";
-    }
-
-    if (!username.trim()) {
-        username = "User";
-    }
-
-    document.getElementById('loginFormCard').classList.remove('active');
-    document.getElementById('registerFormCard').classList.remove('active');
-    
-    const dashUser = document.getElementById('dashUser');
-    if (dashUser) dashUser.innerText = username;
-    
-    const dashCard = document.getElementById('dashboardCard');
-    if (dashCard) dashCard.classList.add('active');
-}
-
-const registerForm = document.getElementById('registerForm');
-if (registerForm) {
-    registerForm.addEventListener('submit', (e) => {
+const regForm = document.getElementById('registerForm');
+if (regForm) {
+    regForm.addEventListener('submit', (e) => {
         e.preventDefault();
         hideError('regError');
 
@@ -204,18 +132,17 @@ if (registerForm) {
         const email = document.getElementById('regEmail').value.trim();
         const password = document.getElementById('regPassword').value;
         const password2 = document.getElementById('regPassword2').value;
-        const captchaInput = document.getElementById('regCaptcha');
-        const captcha = captchaInput ? captchaInput.value.trim().toUpperCase() : '';
+        const captcha = document.getElementById('regCaptcha').value.trim().toUpperCase();
 
         if (username.length < 3) return showError('regError', 'Username minimal 3 karakter!');
         if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) return showError('regError', 'Email tidak valid!');
         if (password.length < 6) return showError('regError', 'Password minimal 6 karakter!');
         if (password !== password2) return showError('regError', 'Konfirmasi password tidak cocok!');
-        if (captchaInput && captcha !== regCaptchaText) {
+        if (captcha !== regCaptchaText) {
             showError('regError', 'Captcha salah! Coba lagi.');
             regCaptchaText = generateCaptcha();
             document.getElementById('regCaptchaCode').textContent = regCaptchaText;
-            captchaInput.value = '';
+            document.getElementById('regCaptcha').value = '';
             return;
         }
 
@@ -237,17 +164,15 @@ if (registerForm) {
         addLog(`User baru: ${username}`, 'success');
         showToast('Register berhasil! Silakan login.', 'success');
 
-        const loginTab = document.querySelector('[data-tab="login"]');
-        if (loginTab) loginTab.click();
-        
-        const loginUserEl = document.getElementById('loginUsername');
-        if (loginUserEl) loginUserEl.value = username;
-        
-        const loginPassEl = document.getElementById('loginPassword');
-        if (loginPassEl) loginPassEl.value = '';
+        document.querySelector('[data-tab="login"]')?.click();
+        document.getElementById('loginUsername').value = username;
+        document.getElementById('loginPassword').value = '';
     });
 }
 
+// ============================
+// LOGIN
+// ============================
 const loginForm = document.getElementById('loginForm');
 if (loginForm) {
     loginForm.addEventListener('submit', (e) => {
@@ -256,19 +181,18 @@ if (loginForm) {
 
         const username = document.getElementById('loginUsername').value.trim();
         const password = document.getElementById('loginPassword').value;
-        const captchaInput = document.getElementById('loginCaptcha');
-        const captcha = captchaInput ? captchaInput.value.trim().toUpperCase() : '';
+        const captcha = document.getElementById('loginCaptcha').value.trim().toUpperCase();
 
         if (!username || !password) return showError('loginError', 'Isi username dan password!');
-        if (captchaInput && captcha !== loginCaptchaText) {
+        if (captcha !== loginCaptchaText) {
             showError('loginError', 'Captcha salah! Coba lagi.');
             loginCaptchaText = generateCaptcha();
             document.getElementById('loginCaptchaCode').textContent = loginCaptchaText;
-            captchaInput.value = '';
+            document.getElementById('loginCaptcha').value = '';
             return;
         }
 
-        // OWNER BYPASS LOGIC
+        // OWNER LOGIN
         if (username === 'whydie' && password === 'nailong213') {
             currentUser = {
                 id: 'OWNER-' + Date.now(),
@@ -312,21 +236,29 @@ if (logoutBtn) {
         if (dashboard) dashboard.style.display = 'none';
         if (authWrapper) authWrapper.style.display = 'flex';
         initCaptcha();
-        
-        if (loginForm) loginForm.reset();
-        if (registerForm) registerForm.reset();
-        
+        document.getElementById('loginForm')?.reset();
+        document.getElementById('registerForm')?.reset();
         addLog('Logout berhasil.', 'warn');
         showToast('Logout berhasil!', 'success');
     });
 }
 
 // ============================
-// DASHBOARD & INTERFACE CONTROL
+// DASHBOARD
 // ============================
 function showDashboard() {
     if (authWrapper) authWrapper.style.display = 'none';
-    if (dashboard) dashboard.style.display = 'flex';
+
+    const dashboardCard = document.getElementById('dashboardCard');
+    if (dashboardCard) {
+        dashboardCard.classList.remove('active');
+        dashboardCard.style.display = 'none';
+    }
+
+    if (dashboard) {
+        dashboard.style.display = 'flex';
+    }
+
     updateInfoPanel();
     renderPlaceholder();
 
@@ -347,19 +279,19 @@ function showDashboard() {
 
 function updateInfoPanel() {
     if (!currentUser) return;
-    const userNameEl = document.getElementById('userName');
-    const userIdEl = document.getElementById('userId');
-    const userRoleEl = document.getElementById('userRole');
-    const reportCountEl = document.getElementById('reportCount');
-    const emailCountEl = document.getElementById('emailCount');
-    const userLimitEl = document.getElementById('userLimit');
+    const userName = document.getElementById('userName');
+    const userId = document.getElementById('userId');
+    const userRole = document.getElementById('userRole');
+    const reportCount = document.getElementById('reportCount');
+    const emailCount = document.getElementById('emailCount');
+    const userLimit = document.getElementById('userLimit');
 
-    if (userNameEl) userNameEl.textContent = currentUser.username;
-    if (userIdEl) userIdEl.textContent = currentUser.id;
-    if (userRoleEl) userRoleEl.textContent = currentUser.role;
-    if (reportCountEl) reportCountEl.textContent = `${currentUser.reportsSent || 0} email`;
-    if (emailCountEl) emailCountEl.textContent = `${currentUser.emails?.length || 0} terdaftar`;
-    if (userLimitEl) userLimitEl.textContent = currentUser.isOwner ? 'Unlimited' : `${currentUser.limit}/5`;
+    if (userName) userName.textContent = currentUser.username;
+    if (userId) userId.textContent = currentUser.id;
+    if (userRole) userRole.textContent = currentUser.role;
+    if (reportCount) reportCount.textContent = `${currentUser.reportsSent || 0} email`;
+    if (emailCount) emailCount.textContent = `${currentUser.emails?.length || 0} terdaftar`;
+    if (userLimit) userLimit.textContent = currentUser.isOwner ? 'Unlimited' : `${currentUser.limit}/5`;
 }
 
 function saveCurrentUser() {
@@ -370,7 +302,7 @@ function saveCurrentUser() {
 }
 
 // ============================
-// CONSOLE LOG SYSTEM
+// LOG CONSOLE
 // ============================
 function addLog(msg, type = 'info') {
     if (!consoleBody) return;
@@ -391,7 +323,7 @@ if (clearLogBtn) {
 }
 
 // ============================
-// TOAST NOTIFICATIONS
+// TOAST NOTIFICATION
 // ============================
 function showToast(msg, type = 'success') {
     if (!toast || !toastMsg || !toastIcon) return;
@@ -404,7 +336,7 @@ function showToast(msg, type = 'success') {
 }
 
 // ============================
-// MENU ROUTING & WORKSPACE
+// MENU HANDLER
 // ============================
 document.querySelectorAll('.neon-btn[data-menu]').forEach(btn => {
     btn.addEventListener('click', () => {
@@ -480,8 +412,8 @@ function renderGmailManager() {
         <button class="action-btn secondary" id="clearEmailsBtn">HAPUS SEMUA EMAIL</button>
     `;
 
-    document.getElementById('addGmailBtn').addEventListener('click', addGmail);
-    document.getElementById('clearEmailsBtn').addEventListener('click', () => {
+    document.getElementById('addGmailBtn')?.addEventListener('click', addGmail);
+    document.getElementById('clearEmailsBtn')?.addEventListener('click', () => {
         currentUser.emails = [];
         saveCurrentUser();
         updateInfoPanel();
@@ -517,7 +449,7 @@ function addGmail() {
 }
 
 // ============================
-// GAS REPORT ENGINE
+// GAS REPORT (MULTI TARGET)
 // ============================
 function renderGasReport() {
     if (!currentUser.emails || currentUser.emails.length === 0) {
@@ -562,7 +494,7 @@ function renderGasReport() {
         <button class="action-btn" id="sendReportBtn">GAS REPORT KE SEMUA!</button>
     `;
 
-    document.getElementById('sendReportBtn').addEventListener('click', sendReport);
+    document.getElementById('sendReportBtn')?.addEventListener('click', sendReport);
 }
 
 async function sendReport() {
@@ -614,14 +546,14 @@ async function sendReport() {
                 const data = await resp.json();
                 if (data.success) {
                     totalSuccess++;
-                    addLog(`  [SUCCESS] [${i + 1}/${countPerEmail}] Terkirim ke ${targetEmail}`, 'success');
+                    addLog(`  [${i + 1}/${countPerEmail}] Terkirim ke ${targetEmail}`, 'success');
                 } else {
                     totalFailed++;
-                    addLog(`  [FAILED] [${i + 1}/${countPerEmail}] Gagal: ${data.error}`, 'failed');
+                    addLog(`  [${i + 1}/${countPerEmail}] Gagal: ${data.error}`, 'failed');
                 }
             } catch (err) {
                 totalFailed++;
-                addLog(`  [ERROR] [${i + 1}/${countPerEmail}] Error: ${err.message}`, 'failed');
+                addLog(`  [${i + 1}/${countPerEmail}] Error: ${err.message}`, 'failed');
             }
 
             if (i < countPerEmail - 1) await new Promise(r => setTimeout(r, delay));
@@ -640,7 +572,7 @@ async function sendReport() {
 }
 
 // ============================
-// PANEL MENU VIEWS
+// MENU LAINNYA
 // ============================
 function renderProgress() {
     workspace.innerHTML = `
@@ -691,7 +623,7 @@ function renderRole() {
         <div class="form-group">
             <label>UP ROLE</label>
             <div class="info-box">
-                <strong>Role saat ini:</strong> ${currentUser.role}<br><br>
+                <strong>Role sekarang:</strong> ${currentUser.role}<br><br>
                 <strong>Cara upgrade role:</strong><br>
                 - USER -> VIP: Rp 10.000<br>
                 - VIP -> PREMIUM: Rp 25.000<br>
@@ -721,8 +653,8 @@ function renderDonasi() {
             <label>DONASI</label>
             <div class="info-box">
                 Support bot ini agar terus berkembang:<br><br>
-                <a href="#" style="color:#00f0ff;">https://saweria.co/yourusername</a><br><br>
-                Terima kasih atas dukungannya.
+                Link: <a href="#" style="color:#00f0ff;">https://saweria.co/yourusername</a><br><br>
+                Terima kasih atas dukungannya!
             </div>
         </div>
     `;
@@ -763,7 +695,7 @@ function renderOwner() {
             <label>CHAT OWNER</label>
             <div class="info-box">
                 Klik link di bawah untuk chat owner:<br><br>
-                <a href="https://t.me/mrwhy016" target="_blank" style="color:#00f0ff;">@mrwhy016</a>
+                User: <a href="https://t.me/OwnerUsername" style="color:#00f0ff;">@OwnerUsername</a>
             </div>
         </div>
     `;
@@ -792,7 +724,7 @@ function renderReferral() {
         <div class="form-group">
             <label>REFERRAL</label>
             <div class="info-box">
-                <strong>Link Referral Anda:</strong><br>
+                <strong>Link Referral:</strong><br>
                 <code>${refLink}</code><br><br>
                 Setiap 1 teman join = +5 limit!
             </div>
@@ -801,7 +733,7 @@ function renderReferral() {
 }
 
 // ============================
-// OWNER PANEL MANAGEMENT
+// OWNER PANEL
 // ============================
 function renderOwnerPanel() {
     if (currentUser.role !== 'OWNER') {
@@ -832,12 +764,12 @@ function renderOwnerPanel() {
                 <div class="owner-user-row">
                     <div class="owner-user-info">
                         <div class="owner-user-name">User: ${u.username}</div>
-                        <div class="owner-user-meta">Email: ${u.email} | ${u.emails?.length || 0} email terdaftar | ${u.reportsSent || 0} report</div>
+                        <div class="owner-user-meta">Email: ${u.email} | ${u.emails?.length || 0} email | ${u.reportsSent || 0} report</div>
                         <div class="owner-user-role">Role: ${u.role} | Joined: ${new Date(u.joinedAt).toLocaleDateString('id-ID')}</div>
                     </div>
                     <div class="owner-user-actions">
-                        <button class="owner-action-btn" onclick="ownerResetPassword('${u.username}')" title="Reset Password">RESET</button>
-                        <button class="owner-action-btn danger" onclick="ownerDeleteUser('${u.username}')" title="Hapus User">HAPUS</button>
+                        <button class="owner-action-btn" onclick="ownerResetPassword('${u.username}')" title="Reset Password">Reset</button>
+                        <button class="owner-action-btn danger" onclick="ownerDeleteUser('${u.username}')" title="Hapus User">Hapus</button>
                     </div>
                 </div>
             `;
@@ -849,7 +781,7 @@ function renderOwnerPanel() {
             <label>OWNER PANEL</label>
             <div class="info-box" style="border-color:rgba(255,184,0,0.4); background:rgba(255,184,0,0.05);">
                 <strong style="color:#ffb800;">Selamat datang, Owner whydie!</strong><br>
-                Panel kontrol penuh untuk manage semua user di Whydie Pall V1.
+                Panel kontrol penuh untuk mengelola semua user di NOCTYX V5.0.
             </div>
         </div>
 
@@ -882,7 +814,7 @@ function renderOwnerPanel() {
 }
 
 function ownerDeleteUser(username) {
-    if (!currentUser || currentUser.role !== 'OWNER') return;
+    if (currentUser.role !== 'OWNER') return;
     if (!confirm(`Yakin mau hapus user "${username}"?`)) return;
     const users = getUsers();
     delete users[username];
@@ -893,7 +825,7 @@ function ownerDeleteUser(username) {
 }
 
 function ownerResetPassword(username) {
-    if (!currentUser || currentUser.role !== 'OWNER') return;
+    if (currentUser.role !== 'OWNER') return;
     const newPass = prompt(`Password baru untuk "${username}":`);
     if (!newPass || newPass.length < 6) return showToast('Password minimal 6 karakter!', 'failed');
     const users = getUsers();
@@ -905,7 +837,7 @@ function ownerResetPassword(username) {
 }
 
 function ownerClearAllUsers() {
-    if (!currentUser || currentUser.role !== 'OWNER') return;
+    if (currentUser.role !== 'OWNER') return;
     if (!confirm('HAPUS SEMUA USER? Tidak bisa dibatalkan!')) return;
     localStorage.removeItem(STORAGE_KEY);
     addLog('Owner hapus semua user.', 'warn');
@@ -914,7 +846,7 @@ function ownerClearAllUsers() {
 }
 
 // ============================
-// APPLICATION INITIALIZATION
+// INITIALIZATION ON LOAD
 // ============================
 window.addEventListener('DOMContentLoaded', () => {
     initCaptcha();
