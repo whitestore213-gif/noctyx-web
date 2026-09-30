@@ -1,7 +1,6 @@
 {
-  "name": "noctyx-web",
-  "version": "5.0.0",
-  "description": "NOCTYX V5.0 - Neon Report Panel",
+  "name": "whydie-pall",
+  "version": "1.0.0",
   "dependencies": {
     "nodemailer": "^6.9.7"
   }
