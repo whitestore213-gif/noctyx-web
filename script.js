@@ -88,7 +88,6 @@ $('doLogin').onclick = () => {
 
   if (!u || !p) return showErr('loginError', 'Isi username & password');
 
-  // Owner default
   if (u === 'whydie' && p === 'nailong213') {
     currentUser = {
       id: 'OWNER-' + Date.now(),
@@ -143,6 +142,14 @@ function showDashboard() {
   $('dashReport').textContent = (currentUser.reportsSent || 0) + ' email';
   $('dashEmail').textContent = (currentUser.emails?.length || 0) + ' terdaftar';
   $('dashLimit').textContent = currentUser.isOwner ? '∞' : currentUser.limit + '/5';
+
+  // Show owner-only buttons
+  if (currentUser.role === 'OWNER') {
+    document.querySelectorAll('.owner-only').forEach(b => b.style.display = 'block');
+  } else {
+    document.querySelectorAll('.owner-only').forEach(b => b.style.display = 'none');
+  }
+
   renderWorkspace('home');
 }
 
@@ -160,8 +167,8 @@ function renderWorkspace(menu) {
 
     case 'gmail': {
       let list = currentUser.emails.length
-        ? `<div class="info-row" style="display:block;margin-bottom:10px"><div style="font-size:11px;color:var(--cyan);margin-bottom:6px">📮 EMAIL TERDAFTAR:</div>${currentUser.emails.map((e, i) => `<div style="font-size:12px;padding:4px 0;word-break:break-all">${i + 1}. ${e.email}</div>`).join('')}</div>`
-        : '<div class="info-row" style="display:block;margin-bottom:10px;font-size:12px;color:var(--dim)">📭 Belum ada email terdaftar.</div>';
+        ? `<div class="info-row" style="display:block;margin-bottom:10px"><div style="font-size:11px;color:var(--cyan);margin-bottom:6px">EMAIL TERDAFTAR:</div>${currentUser.emails.map((e, i) => `<div style="font-size:12px;padding:4px 0;word-break:break-all">${i + 1}. ${e.email}</div>`).join('')}</div>`
+        : '<div class="info-row" style="display:block;margin-bottom:10px;font-size:12px;color:var(--dim)">Belum ada email terdaftar.</div>';
 
       ws.innerHTML = `
         <div class="form-group"><label>GMAIL MANAGER</label>
@@ -192,7 +199,7 @@ function renderWorkspace(menu) {
 
     case 'report': {
       if (!currentUser.emails.length) {
-        ws.innerHTML = '<div class="info-row" style="display:block;color:var(--red);border-color:rgba(239,68,68,.3)">❌ Belum ada sender email. Tambah di Gmail Manager dulu.</div>';
+        ws.innerHTML = '<div class="info-row" style="display:block;color:var(--red);border-color:rgba(239,68,68,.3)">Belum ada sender email. Tambah di Gmail Manager dulu.</div>';
         return;
       }
       ws.innerHTML = `
@@ -309,8 +316,86 @@ function renderWorkspace(menu) {
           </div>
         </div>`;
       break;
+
+    case 'ownerpanel':
+      if (currentUser.role !== 'OWNER') {
+        ws.innerHTML = '<div class="info-row" style="display:block;color:var(--red);border-color:rgba(239,68,68,.3)">Akses ditolak. Halaman ini khusus Owner.</div>';
+        return;
+      }
+      renderOwnerPanel();
+      break;
   }
 }
+
+// ==================== OWNER PANEL ====================
+function renderOwnerPanel() {
+  const ws = $('workspace');
+  const users = getUsers();
+  const list = Object.values(users);
+
+  let totalEmails = 0, totalReports = 0;
+  list.forEach(u => {
+    totalEmails += u.emails?.length || 0;
+    totalReports += u.reportsSent || 0;
+  });
+
+  let rows = '';
+  if (!list.length) {
+    rows = '<div class="owner-empty">Belum ada user yang terdaftar.</div>';
+  } else {
+    list.sort((a, b) => new Date(b.joinedAt) - new Date(a.joinedAt));
+    list.forEach(u => {
+      const roleClass = u.role === 'OWNER' ? 'owner' : u.role === 'VIP' ? 'vip' : '';
+      rows += `
+        <div class="owner-user-row">
+          <div class="owner-user-info">
+            <div class="owner-user-name">${u.username}</div>
+            <div class="owner-user-meta">${u.email} • ${u.emails?.length || 0} sender • ${u.reportsSent || 0} report</div>
+            <div class="owner-user-role ${roleClass}">${u.role} • ${new Date(u.joinedAt).toLocaleDateString('id-ID')}</div>
+          </div>
+          <button class="owner-del-btn" onclick="deleteUser('${u.username}')">HAPUS</button>
+        </div>
+      `;
+    });
+  }
+
+  ws.innerHTML = `
+    <div class="form-group"><label>OWNER PANEL</label>
+      <div style="font-size:11px;color:var(--gold);line-height:1.7;padding:10px;background:rgba(251,191,36,.05);border:1px solid rgba(251,191,36,.2);border-radius:8px;margin-bottom:12px">
+        Selamat datang, Owner! Di sini lo bisa liat semua user yang daftar ke web lo.
+      </div>
+    </div>
+
+    <div class="owner-stat-grid">
+      <div class="owner-stat">
+        <div class="owner-stat-num">${list.length}</div>
+        <div class="owner-stat-label">TOTAL USER</div>
+      </div>
+      <div class="owner-stat">
+        <div class="owner-stat-num">${totalEmails}</div>
+        <div class="owner-stat-label">SENDER EMAIL</div>
+      </div>
+      <div class="owner-stat">
+        <div class="owner-stat-num">${totalReports}</div>
+        <div class="owner-stat-label">TOTAL REPORT</div>
+      </div>
+    </div>
+
+    <div class="form-group"><label>DAFTAR USER TERDAFTAR</label>
+      <div class="owner-user-list">${rows}</div>
+    </div>
+  `;
+}
+
+window.deleteUser = function(username) {
+  if (currentUser.role !== 'OWNER') return;
+  if (!confirm(`Hapus user "${username}"?`)) return;
+  const users = getUsers();
+  delete users[username];
+  saveUsers(users);
+  toast(`User "${username}" dihapus`);
+  renderOwnerPanel();
+};
 
 function updateDash() {
   $('dashReport').textContent = (currentUser.reportsSent || 0) + ' email';
@@ -417,4 +502,4 @@ if (session === '__OWNER__') {
     currentUser = users[session];
     showDashboard();
   } else clearSession();
-    }
+  }
