@@ -287,8 +287,8 @@
 
         <!-- Menu Simple Utama -->
         <div class="menu-box" id="menuBox">
-            <button class="btn-menu" onclick="openLoginForm()">Login</button>
-            <button class="btn-menu" onclick="openRegisterForm()">Register</button>
+            <button type="button" class="btn-menu" id="loginBtn">Login</button>
+            <button type="button" class="btn-menu" id="regBtn">Register</button>
         </div>
 
         <!-- FORM KHUSUS LOGIN -->
@@ -310,8 +310,8 @@
                 <input type="password" id="loginPassword" class="form-input" placeholder="Masukkan password">
             </div>
 
-            <button type="button" class="submit-btn" onclick="handleLogin()">LOGIN</button>
-            <button type="button" class="btn-close" onclick="closeAllForms()">&larr; Kembali ke menu utama</button>
+            <button type="button" class="submit-btn" id="submitLoginBtn">LOGIN</button>
+            <button type="button" class="btn-close" id="closeLoginBtn">&larr; Kembali ke menu utama</button>
         </div>
 
         <!-- FORM KHUSUS REGISTER -->
@@ -338,11 +338,11 @@
                 <input type="password" id="regConfirmPassword" class="form-input" placeholder="Ulangi password">
             </div>
 
-            <button type="button" class="submit-btn" onclick="handleRegister()">REGISTER</button>
-            <button type="button" class="btn-close" onclick="closeAllForms()">&larr; Kembali ke menu utama</button>
+            <button type="button" class="submit-btn" id="submitRegBtn">REGISTER</button>
+            <button type="button" class="btn-close" id="closeRegBtn">&larr; Kembali ke menu utama</button>
         </div>
 
-        <!-- DASHBOARD PANEL CARD (Sama Persis Foto Ke-2) -->
+        <!-- DASHBOARD PANEL CARD -->
         <div class="form-card" id="dashboardCard">
             <div class="neon-diamond"></div>
             
@@ -356,7 +356,7 @@
                 <p style="font-size: 11px; color: #00ff88; margin-top: 6px;">Status: Active</p>
             </div>
 
-            <button type="button" class="submit-btn" style="background: #ff4d4d; color: #ffffff; box-shadow: 0 0 15px rgba(255, 77, 77, 0.3);" onclick="handleLogout()">LOGOUT</button>
+            <button type="button" class="submit-btn" style="background: #ff4d4d; color: #ffffff;" id="logoutBtn">LOGOUT</button>
         </div>
 
         <!-- Contact Section -->
@@ -377,8 +377,64 @@
 
     </div>
 
-    <!-- Script Utama Eksternal -->
-    <script src="script.js"></script>
+    <!-- Script JavaScript Langsung Aktif -->
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const menuBox = document.getElementById('menuBox');
+            const welcomeText = document.getElementById('welcomeText');
+            const loginFormCard = document.getElementById('loginFormCard');
+            const registerFormCard = document.getElementById('registerFormCard');
+            const dashboardCard = document.getElementById('dashboardCard');
+            const dashUser = document.getElementById('dashUser');
+
+            function closeAll() {
+                loginFormCard.classList.remove('active');
+                registerFormCard.classList.remove('active');
+                dashboardCard.classList.remove('active');
+                menuBox.style.display = 'flex';
+                welcomeText.style.display = 'block';
+            }
+
+            // Event listener klik tombol
+            document.getElementById('loginBtn').addEventListener('click', () => {
+                menuBox.style.display = 'none';
+                welcomeText.style.display = 'none';
+                registerFormCard.classList.remove('active');
+                dashboardCard.classList.remove('active');
+                loginFormCard.classList.add('active');
+            });
+
+            document.getElementById('regBtn').addEventListener('click', () => {
+                menuBox.style.display = 'none';
+                welcomeText.style.display = 'none';
+                loginFormCard.classList.remove('active');
+                dashboardCard.classList.remove('active');
+                registerFormCard.classList.add('active');
+            });
+
+            document.getElementById('closeLoginBtn').addEventListener('click', closeAll);
+            document.getElementById('closeRegBtn').addEventListener('click', closeAll);
+
+            // Logika Login
+            document.getElementById('submitLoginBtn').addEventListener('click', () => {
+                const user = document.getElementById('loginUsername').value.trim();
+                dashUser.innerText = user ? user : 'User';
+                loginFormCard.classList.remove('active');
+                dashboardCard.classList.add('active');
+            });
+
+            // Logika Register
+            document.getElementById('submitRegBtn').addEventListener('click', () => {
+                const user = document.getElementById('regUsername').value.trim();
+                dashUser.innerText = user ? user : 'User';
+                registerFormCard.classList.remove('active');
+                dashboardCard.classList.add('active');
+            });
+
+            // Logika Logout
+            document.getElementById('logoutBtn').addEventListener('click', closeAll);
+        });
+    </script>
 
 </body>
 </html>
