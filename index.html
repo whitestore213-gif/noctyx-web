@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Whydie Pall V1 - Report Panel</title>
-    <!-- FontAwesome Font Icon -->
+    <title>Whydie Pall V1</title>
+    <!-- FontAwesome Icon -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <!-- Google Font Monospace & Inter -->
     <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -14,11 +14,11 @@
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            font-family: 'Inter', sans-serif;
+            font-family: 'Share Tech Mono', monospace;
         }
 
         body {
-            background-color: #0b0c10;
+            background-color: #000000;
             color: #d8d8d8;
             min-height: 100vh;
             display: flex;
@@ -32,17 +32,19 @@
             max-width: 380px;
             display: flex;
             flex-direction: column;
-            gap: 15px;
+            align-items: center;
+            gap: 20px;
         }
 
-        /* Banner Video Estetik Atas */
+        /* Banner Video Minimalis */
         .video-card {
             width: 100%;
-            height: 150px;
-            border-radius: 16px;
-            border: 1px solid rgba(255, 255, 255, 0.1);
+            height: 170px;
+            border-radius: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.12);
             position: relative;
             overflow: hidden;
+            background: #0a0a0a;
         }
 
         .card-video {
@@ -52,22 +54,82 @@
             display: block;
         }
 
-        /* Card Form Login Utama */
-        .auth-card {
-            background: #12141a;
-            border: 1px solid rgba(255, 255, 255, 0.08);
-            border-radius: 20px;
-            padding: 24px 20px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+        /* Text Welcome */
+        .text-section {
+            text-align: center;
+            margin: 2px 0;
         }
 
-        /* Logo Diamond Neon */
+        .text-section h2 {
+            font-size: 20px;
+            color: #ffffff;
+            letter-spacing: 1px;
+            font-weight: normal;
+        }
+
+        .text-section p {
+            font-size: 11px;
+            color: #777777;
+            margin-top: 6px;
+        }
+
+        /* Menu Simple */
+        .menu-box {
+            width: 100%;
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            border-radius: 20px;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            background: #0a0a0a;
+        }
+
+        .btn-menu {
+            width: 100%;
+            padding: 12px;
+            border-radius: 10px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            background: transparent;
+            color: #ffffff;
+            font-size: 14px;
+            letter-spacing: 1px;
+            cursor: pointer;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        .btn-menu:hover {
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        /* Form Modal Interaktif Tanpa Captcha */
+        .form-card {
+            display: none;
+            width: 100%;
+            background: #12141a;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            padding: 24px 20px;
+            flex-direction: column;
+            align-items: center;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.8);
+            font-family: 'Inter', sans-serif;
+            animation: fadeIn 0.4s ease-in-out;
+        }
+
+        .form-card.active {
+            display: flex;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
         .neon-diamond {
-            width: 16px;
-            height: 16px;
+            width: 14px;
+            height: 14px;
             background: #00d2ff;
             transform: rotate(45deg);
             box-shadow: 0 0 12px #00d2ff;
@@ -76,11 +138,12 @@
 
         .brand-header {
             text-align: center;
-            margin-bottom: 20px;
+            margin-bottom: 18px;
+            font-family: 'Inter', sans-serif;
         }
 
         .brand-title {
-            font-size: 20px;
+            font-size: 18px;
             font-weight: 700;
             color: #ffffff;
             letter-spacing: 1px;
@@ -88,7 +151,7 @@
 
         .brand-title span {
             color: #00d2ff;
-            font-size: 13px;
+            font-size: 12px;
             margin-left: 4px;
         }
 
@@ -98,7 +161,7 @@
             margin-top: 4px;
         }
 
-        /* Toggle Tab Login / Register */
+        /* Switcher Tab Login / Register */
         .tab-switcher {
             width: 100%;
             background: #090a0d;
@@ -106,7 +169,7 @@
             padding: 4px;
             display: flex;
             gap: 4px;
-            margin-bottom: 20px;
+            margin-bottom: 18px;
         }
 
         .tab-btn {
@@ -120,6 +183,7 @@
             border-radius: 8px;
             cursor: pointer;
             transition: all 0.3s ease;
+            font-family: 'Inter', sans-serif;
         }
 
         .tab-btn.active {
@@ -128,13 +192,13 @@
             box-shadow: 0 0 10px rgba(0, 210, 255, 0.4);
         }
 
-        /* Form Group Input */
         .form-group {
             width: 100%;
             display: flex;
             flex-direction: column;
             gap: 6px;
             margin-bottom: 14px;
+            text-align: left;
         }
 
         .form-label {
@@ -143,6 +207,7 @@
             color: #8a94a6;
             letter-spacing: 0.5px;
             text-transform: uppercase;
+            font-family: 'Inter', sans-serif;
         }
 
         .form-input {
@@ -150,58 +215,17 @@
             background: #090a0d;
             border: 1px solid rgba(255, 255, 255, 0.08);
             border-radius: 8px;
-            padding: 12px;
+            padding: 11px;
             color: #ffffff;
             font-size: 12px;
             outline: none;
-            transition: border-color 0.3s;
+            font-family: 'Inter', sans-serif;
         }
 
         .form-input:focus {
             border-color: #00d2ff;
         }
 
-        .form-input::placeholder {
-            color: #4a505e;
-        }
-
-        /* Captcha Box */
-        .captcha-wrapper {
-            display: flex;
-            gap: 8px;
-            margin-bottom: 6px;
-        }
-
-        .captcha-box {
-            flex: 1;
-            background: #090a0d;
-            border: 1px solid rgba(255, 255, 255, 0.08);
-            border-radius: 8px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            font-family: 'Share Tech Mono', monospace;
-            font-size: 16px;
-            letter-spacing: 4px;
-            color: #00d2ff;
-            font-weight: bold;
-            user-select: none;
-        }
-
-        .captcha-refresh {
-            background: #090a0d;
-            border: 1px solid rgba(255, 255, 255, 0.08);
-            border-radius: 8px;
-            width: 42px;
-            color: #6c757d;
-            cursor: pointer;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            font-size: 12px;
-        }
-
-        /* Main Action Button */
         .submit-btn {
             width: 100%;
             padding: 12px;
@@ -213,86 +237,65 @@
             font-weight: 700;
             letter-spacing: 1px;
             cursor: pointer;
-            margin-top: 10px;
+            margin-top: 6px;
             box-shadow: 0 0 15px rgba(0, 210, 255, 0.3);
-            transition: all 0.3s;
+            font-family: 'Inter', sans-serif;
         }
 
-        .submit-btn:hover {
-            background: #00b8e6;
-            box-shadow: 0 0 20px rgba(0, 210, 255, 0.5);
-        }
-
-        /* Text Footer Form */
-        .auth-footer {
-            margin-top: 16px;
-            font-size: 11px;
+        .btn-close {
+            background: transparent;
+            border: none;
             color: #6c757d;
-            text-align: center;
+            font-size: 11px;
+            margin-top: 14px;
+            cursor: pointer;
+            text-decoration: underline;
+            font-family: 'Inter', sans-serif;
         }
 
-        .auth-footer a {
-            color: #00d2ff;
-            text-decoration: none;
-            font-weight: 600;
-        }
-
-        .status-badge {
-            margin-top: 20px;
-            display: flex;
-            align-items: center;
-            gap: 6px;
-            font-size: 10px;
-            color: #555d6d;
-        }
-
-        .status-dot {
-            width: 6px;
-            height: 6px;
-            background: #22c55e;
-            border-radius: 50%;
-            box-shadow: 0 0 6px #22c55e;
-        }
-
-        /* Contact Section Minimalis */
+        /* Contact Section */
         .contact-box {
             width: 100%;
-            border: 1px solid rgba(255, 255, 255, 0.08);
-            border-radius: 16px;
-            padding: 14px;
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            border-radius: 20px;
+            padding: 18px 15px;
             display: flex;
             flex-direction: column;
             align-items: center;
-            gap: 10px;
-            background: #12141a;
+            gap: 15px;
+            background: #0a0a0a;
         }
 
         .contact-box span {
-            font-size: 11px;
-            color: #6c757d;
+            font-size: 12px;
+            color: #aaaaaa;
         }
 
         .social-icons {
             display: flex;
-            gap: 12px;
+            gap: 15px;
         }
 
         .icon-circle {
-            width: 36px;
-            height: 36px;
+            width: 42px;
+            height: 42px;
             background-color: #ffffff;
             border-radius: 50%;
             display: flex;
             justify-content: center;
             align-items: center;
-            color: #000000;
-            font-size: 16px;
+            color: #0088cc;
+            font-size: 20px;
             text-decoration: none;
+        }
+
+        .icon-circle.tiktok {
+            color: #000000;
         }
 
         .copyright {
             font-size: 10px;
-            color: #4a505e;
+            color: #555555;
         }
     </style>
 </head>
@@ -300,62 +303,63 @@
 
     <div class="main-container">
         
-        <!-- Header Video -->
+        <!-- Video Header -->
         <div class="video-card">
             <video class="card-video" autoplay loop muted playsinline>
                 <source src="video.mp4" type="video/mp4">
             </video>
         </div>
 
-        <!-- Card Form Neon (Foto 2) -->
-        <div class="auth-card">
+        <!-- Section Teks Welcome -->
+        <div class="text-section" id="welcomeText">
+            <h2>Welcome to Whydie Pall</h2>
+            <p>Please log in or register to continue</p>
+        </div>
+
+        <!-- Menu Simple -->
+        <div class="menu-box" id="menuBox">
+            <button class="btn-menu" onclick="openForm('login')">Login</button>
+            <button class="btn-menu" onclick="openForm('register')">Register</button>
+        </div>
+
+        <!-- Form Modal (Input Username & Password Only) -->
+        <div class="form-card" id="formCard">
             <div class="neon-diamond"></div>
             
             <div class="brand-header">
                 <div class="brand-title">WHYDIE PALL <span>V1.0</span></div>
-                <div class="brand-subtitle">Report Panel — Neon Edition</div>
+                <div class="brand-subtitle" id="formSubtitle">Report Panel — Neon Edition</div>
             </div>
 
-            <!-- Tab Switcher -->
+            <!-- Switcher Login/Register -->
             <div class="tab-switcher">
-                <button class="tab-btn active">LOGIN</button>
-                <button class="tab-btn">REGISTER</button>
+                <button class="tab-btn" id="tabLogin" onclick="switchTab('login')">LOGIN</button>
+                <button class="tab-btn" id="tabRegister" onclick="switchTab('register')">REGISTER</button>
             </div>
 
-            <!-- Input Username -->
+            <!-- Field Input Username -->
             <div class="form-group">
                 <label class="form-label">Username</label>
                 <input type="text" class="form-input" placeholder="Masukkan username">
             </div>
 
-            <!-- Input Password -->
+            <!-- Field Input Password -->
             <div class="form-group">
                 <label class="form-label">Password</label>
                 <input type="password" class="form-input" placeholder="Masukkan password">
             </div>
 
-            <!-- Input Captcha -->
-            <div class="form-group">
-                <label class="form-label">Captcha Verification</label>
-                <div class="captcha-wrapper">
-                    <div class="captcha-box">E W B X</div>
-                    <button class="captcha-refresh" type="button"><i class="fa-solid fa-rotate-right"></i></button>
-                </div>
-                <input type="text" class="form-input" placeholder="Masukkan kode captcha">
+            <!-- Input Tambahan Khusus Register -->
+            <div class="form-group" id="confirmPassGroup" style="display: none;">
+                <label class="form-label">Confirm Password</label>
+                <input type="password" class="form-input" placeholder="Ulangi password">
             </div>
 
-            <!-- Button Submit -->
-            <button type="button" class="submit-btn">LOGIN</button>
+            <!-- Submit Button -->
+            <button type="button" class="submit-btn" id="submitBtn">LOGIN</button>
 
-            <!-- Bottom Link -->
-            <div class="auth-footer">
-                Belum punya akun? <a href="#">Register sekarang</a>
-            </div>
-
-            <div class="status-badge">
-                <div class="status-dot"></div>
-                Secure Authentication Active
-            </div>
+            <!-- Kembali ke Menu Utama -->
+            <button type="button" class="btn-close" onclick="closeForm()">&larr; Kembali ke menu utama</button>
         </div>
 
         <!-- Contact Section -->
@@ -365,7 +369,7 @@
                 <a href="https://t.me/mrwhy016" target="_blank" class="icon-circle" title="Telegram">
                     <i class="fa-paper-plane fas"></i>
                 </a>
-                <a href="https://www.tiktok.com/@wildan,aj,bre" target="_blank" class="icon-circle" title="TikTok">
+                <a href="https://www.tiktok.com/@wildan,aj,bre" target="_blank" class="icon-circle tiktok" title="TikTok">
                     <i class="fa-brands fa-tiktok"></i>
                 </a>
             </div>
@@ -375,6 +379,44 @@
         </div>
 
     </div>
+
+    <!-- Script Kontrol -->
+    <script>
+        function openForm(mode) {
+            document.getElementById('menuBox').style.display = 'none';
+            document.getElementById('welcomeText').style.display = 'none';
+            document.getElementById('formCard').classList.add('active');
+            switchTab(mode);
+        }
+
+        function closeForm() {
+            document.getElementById('formCard').classList.remove('active');
+            document.getElementById('menuBox').style.display = 'flex';
+            document.getElementById('welcomeText').style.display = 'block';
+        }
+
+        function switchTab(mode) {
+            const tabLogin = document.getElementById('tabLogin');
+            const tabRegister = document.getElementById('tabRegister');
+            const submitBtn = document.getElementById('submitBtn');
+            const confirmPassGroup = document.getElementById('confirmPassGroup');
+            const formSubtitle = document.getElementById('formSubtitle');
+
+            if (mode === 'login') {
+                tabLogin.classList.add('active');
+                tabRegister.classList.remove('active');
+                submitBtn.innerText = 'LOGIN';
+                formSubtitle.innerText = 'Report Panel — Login Account';
+                confirmPassGroup.style.display = 'none';
+            } else {
+                tabRegister.classList.add('active');
+                tabLogin.classList.remove('active');
+                submitBtn.innerText = 'REGISTER';
+                formSubtitle.innerText = 'Report Panel — Create Account';
+                confirmPassGroup.style.display = 'flex';
+            }
+        }
+    </script>
 
 </body>
 </html>
