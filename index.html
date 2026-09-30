@@ -8,8 +8,265 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <!-- Google Font Monospace & Inter -->
     <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <!-- Style CSS Utama -->
-    <link rel="stylesheet" href="style.css">
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Share Tech Mono', monospace;
+        }
+
+        body {
+            background-color: #000000;
+            color: #d8d8d8;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px 0;
+        }
+
+        .main-container {
+            width: 90%;
+            max-width: 380px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 20px;
+        }
+
+        /* Banner Video Minimalis */
+        .video-card {
+            width: 100%;
+            height: 170px;
+            border-radius: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            position: relative;
+            overflow: hidden;
+            background: #0a0a0a;
+        }
+
+        .card-video {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+        }
+
+        /* Text Welcome */
+        .text-section {
+            text-align: center;
+            margin: 2px 0;
+        }
+
+        .text-section h2 {
+            font-size: 20px;
+            color: #ffffff;
+            letter-spacing: 1px;
+            font-weight: normal;
+        }
+
+        .text-section p {
+            font-size: 11px;
+            color: #777777;
+            margin-top: 6px;
+        }
+
+        /* Menu Simple */
+        .menu-box {
+            width: 100%;
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            border-radius: 20px;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            background: #0a0a0a;
+        }
+
+        .btn-menu {
+            width: 100%;
+            padding: 12px;
+            border-radius: 10px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            background: transparent;
+            color: #ffffff;
+            font-size: 14px;
+            letter-spacing: 1px;
+            cursor: pointer;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        .btn-menu:hover {
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        /* Form Card & Dashboard Card */
+        .form-card {
+            display: none;
+            width: 100%;
+            background: #12141a;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            padding: 24px 20px;
+            flex-direction: column;
+            align-items: center;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.8);
+            font-family: 'Inter', sans-serif;
+            animation: fadeIn 0.4s ease-in-out;
+        }
+
+        .form-card.active {
+            display: flex;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .neon-diamond {
+            width: 14px;
+            height: 14px;
+            background: #00d2ff;
+            transform: rotate(45deg);
+            box-shadow: 0 0 12px #00d2ff;
+            margin-bottom: 12px;
+        }
+
+        .brand-header {
+            text-align: center;
+            margin-bottom: 20px;
+            font-family: 'Inter', sans-serif;
+        }
+
+        .brand-title {
+            font-size: 18px;
+            font-weight: 700;
+            color: #ffffff;
+            letter-spacing: 1px;
+        }
+
+        .brand-title span {
+            color: #00d2ff;
+            font-size: 12px;
+            margin-left: 4px;
+        }
+
+        .brand-subtitle {
+            font-size: 11px;
+            color: #6c757d;
+            margin-top: 4px;
+        }
+
+        .form-group {
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            margin-bottom: 14px;
+            text-align: left;
+        }
+
+        .form-label {
+            font-size: 10px;
+            font-weight: 600;
+            color: #8a94a6;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+            font-family: 'Inter', sans-serif;
+        }
+
+        .form-input {
+            width: 100%;
+            background: #090a0d;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 8px;
+            padding: 11px;
+            color: #ffffff;
+            font-size: 12px;
+            outline: none;
+            font-family: 'Inter', sans-serif;
+        }
+
+        .form-input:focus {
+            border-color: #00d2ff;
+        }
+
+        .submit-btn {
+            width: 100%;
+            padding: 12px;
+            background: #00d2ff;
+            border: none;
+            border-radius: 8px;
+            color: #000000;
+            font-size: 12px;
+            font-weight: 700;
+            letter-spacing: 1px;
+            cursor: pointer;
+            margin-top: 6px;
+            box-shadow: 0 0 15px rgba(0, 210, 255, 0.3);
+            font-family: 'Inter', sans-serif;
+        }
+
+        .btn-close {
+            background: transparent;
+            border: none;
+            color: #6c757d;
+            font-size: 11px;
+            margin-top: 14px;
+            cursor: pointer;
+            text-decoration: underline;
+            font-family: 'Inter', sans-serif;
+        }
+
+        /* Contact Section */
+        .contact-box {
+            width: 100%;
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            border-radius: 20px;
+            padding: 18px 15px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 15px;
+            background: #0a0a0a;
+        }
+
+        .contact-box span {
+            font-size: 12px;
+            color: #aaaaaa;
+        }
+
+        .social-icons {
+            display: flex;
+            gap: 15px;
+        }
+
+        .icon-circle {
+            width: 42px;
+            height: 42px;
+            background-color: #ffffff;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: #0088cc;
+            font-size: 20px;
+            text-decoration: none;
+        }
+
+        .icon-circle.tiktok {
+            color: #000000;
+        }
+
+        .copyright {
+            font-size: 10px;
+            color: #555555;
+        }
+    </style>
 </head>
 <body>
 
@@ -22,148 +279,84 @@
             </video>
         </div>
 
-        <!-- AUTH WRAPPER (LOGIN & REGISTER) -->
-        <div class="auth-wrapper" id="authWrapper">
-            <div class="auth-card">
-                <div class="neon-diamond"></div>
-                
-                <div class="brand-header">
-                    <div class="brand-title">WHYDIE PALL <span>V1.0</span></div>
-                    <div class="brand-subtitle">Report Panel Access</div>
-                </div>
-
-                <!-- Tab Navigation -->
-                <div class="auth-tabs">
-                    <button class="auth-tab active" data-tab="login">LOGIN</button>
-                    <button class="auth-tab" data-tab="register">REGISTER</button>
-                </div>
-
-                <!-- FORM LOGIN -->
-                <form id="loginForm" class="auth-form active">
-                    <div id="loginError" class="error-msg"></div>
-
-                    <div class="form-group">
-                        <label class="form-label">Username</label>
-                        <input type="text" id="loginUsername" class="form-input" placeholder="Masukkan username" required>
-                    </div>
-
-                    <div class="form-group">
-                        <label class="form-label">Password</label>
-                        <input type="password" id="loginPassword" class="form-input" placeholder="Masukkan password" required>
-                    </div>
-
-                    <div class="form-group captcha-group">
-                        <label class="form-label">Captcha</label>
-                        <div class="captcha-box">
-                            <span id="loginCaptchaCode" class="captcha-code">ABCD</span>
-                            <button type="button" id="loginCaptchaRefresh" class="btn-refresh">Refresh</button>
-                        </div>
-                        <input type="text" id="loginCaptcha" class="form-input" placeholder="Ketik captcha di atas" required>
-                    </div>
-
-                    <button type="submit" class="submit-btn">LOGIN</button>
-                    <div class="form-footer">
-                        Belum punya akun? <a href="#" id="switchToRegister">Register di sini</a>
-                    </div>
-                </form>
-
-                <!-- FORM REGISTER -->
-                <form id="registerForm" class="auth-form">
-                    <div id="regError" class="error-msg"></div>
-
-                    <div class="form-group">
-                        <label class="form-label">Username</label>
-                        <input type="text" id="regUsername" class="form-input" placeholder="Masukkan username" required>
-                    </div>
-
-                    <div class="form-group">
-                        <label class="form-label">Email</label>
-                        <input type="email" id="regEmail" class="form-input" placeholder="Masukkan email" required>
-                    </div>
-
-                    <div class="form-group">
-                        <label class="form-label">Password</label>
-                        <input type="password" id="regPassword" class="form-input" placeholder="Minimal 6 karakter" required>
-                    </div>
-
-                    <div class="form-group">
-                        <label class="form-label">Konfirmasi Password</label>
-                        <input type="password" id="regPassword2" class="form-input" placeholder="Ulangi password" required>
-                    </div>
-
-                    <div class="form-group captcha-group">
-                        <label class="form-label">Captcha</label>
-                        <div class="captcha-box">
-                            <span id="regCaptchaCode" class="captcha-code">XYZ1</span>
-                            <button type="button" id="regCaptchaRefresh" class="btn-refresh">Refresh</button>
-                        </div>
-                        <input type="text" id="regCaptcha" class="form-input" placeholder="Ketik captcha di atas" required>
-                    </div>
-
-                    <button type="submit" class="submit-btn">REGISTER</button>
-                    <div class="form-footer">
-                        Sudah punya akun? <a href="#" id="switchToLogin">Login di sini</a>
-                    </div>
-                </form>
-            </div>
+        <!-- Section Teks Welcome -->
+        <div class="text-section" id="welcomeText">
+            <h2>Welcome to Whydie Pall</h2>
+            <p>Please log in or register to continue</p>
         </div>
 
-        <!-- DASHBOARD UTAMA (AKAN DITAMPILKAN SETELAH LOGIN) -->
-        <div class="dashboard-container" id="dashboard" style="display: none;">
+        <!-- Menu Simple Utama -->
+        <div class="menu-box" id="menuBox">
+            <button class="btn-menu" onclick="openLoginForm()">Login</button>
+            <button class="btn-menu" onclick="openRegisterForm()">Register</button>
+        </div>
+
+        <!-- FORM KHUSUS LOGIN -->
+        <div class="form-card" id="loginFormCard">
+            <div class="neon-diamond"></div>
             
-            <!-- User Info Header -->
-            <div class="user-info-card">
-                <div class="user-details">
-                    <div>User: <strong id="userName">-</strong></div>
-                    <div>ID: <span id="userId">-</span></div>
-                    <div>Role: <span id="userRole">-</span></div>
-                </div>
-                <div class="user-stats-summary">
-                    <div>Report: <strong id="reportCount">0 email</strong></div>
-                    <div>Email: <strong id="emailCount">0 terdaftar</strong></div>
-                    <div>Limit: <strong id="userLimit">0/5</strong></div>
-                </div>
-                <button id="logoutBtn" class="logout-btn">LOGOUT</button>
+            <div class="brand-header">
+                <div class="brand-title">WHYDIE PALL <span>V1.0</span></div>
+                <div class="brand-subtitle">Report Panel — Login Account</div>
             </div>
 
-            <!-- Menu Grid Button -->
-            <div class="menu-grid">
-                <button class="neon-btn" data-menu="gmail">Gmail Manager</button>
-                <button class="neon-btn" data-menu="report">Gas Report</button>
-                <button class="neon-btn" data-menu="progress">Progress</button>
-                <button class="neon-btn" data-menu="stats">Statistik</button>
-                <button class="neon-btn" data-menu="session">Session</button>
-                <button class="neon-btn" data-menu="role">Up Role</button>
-                <button class="neon-btn" data-menu="limit">My Limit</button>
-                <button class="neon-btn" data-menu="donasi">Donasi</button>
-                <button class="neon-btn" data-menu="qris">QRIS</button>
-                <button class="neon-btn" data-menu="owner">Owner</button>
-                <button class="neon-btn" data-menu="akun">Cek Akun</button>
-                <button class="neon-btn" data-menu="referral">Referral</button>
+            <div class="form-group">
+                <label class="form-label">Username</label>
+                <input type="text" id="loginUsername" class="form-input" placeholder="Masukkan username">
             </div>
 
-            <!-- Workspace Area (Tempat Menu Berjalan) -->
-            <div class="workspace-card" id="workspace">
-                <div class="workspace-placeholder">
-                    <p>Pilih menu di atas untuk memulai</p>
-                </div>
+            <div class="form-group">
+                <label class="form-label">Password</label>
+                <input type="password" id="loginPassword" class="form-input" placeholder="Masukkan password">
             </div>
 
-            <!-- Console Log Body -->
-            <div class="console-card">
-                <div class="console-header">
-                    <span>CONSOLE LOG</span>
-                    <button id="clearLog" class="btn-small">Clear</button>
-                </div>
-                <div class="console-body" id="consoleBody"></div>
-            </div>
-
+            <button type="button" class="submit-btn" onclick="handleLogin()">LOGIN</button>
+            <button type="button" class="btn-close" onclick="closeAllForms()">&larr; Kembali ke menu utama</button>
         </div>
 
-        <!-- Toast Notification -->
-        <div id="toast" class="toast">
-            <span id="toastIcon">OK</span>
-            <span id="toastMsg">Notification</span>
+        <!-- FORM KHUSUS REGISTER -->
+        <div class="form-card" id="registerFormCard">
+            <div class="neon-diamond"></div>
+            
+            <div class="brand-header">
+                <div class="brand-title">WHYDIE PALL <span>V1.0</span></div>
+                <div class="brand-subtitle">Report Panel — Create Account</div>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">Username</label>
+                <input type="text" id="regUsername" class="form-input" placeholder="Masukkan username">
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">Password</label>
+                <input type="password" id="regPassword" class="form-input" placeholder="Masukkan password">
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">Confirm Password</label>
+                <input type="password" id="regConfirmPassword" class="form-input" placeholder="Ulangi password">
+            </div>
+
+            <button type="button" class="submit-btn" onclick="handleRegister()">REGISTER</button>
+            <button type="button" class="btn-close" onclick="closeAllForms()">&larr; Kembali ke menu utama</button>
+        </div>
+
+        <!-- DASHBOARD PANEL CARD (Sama Persis Foto Ke-2) -->
+        <div class="form-card" id="dashboardCard">
+            <div class="neon-diamond"></div>
+            
+            <div class="brand-header">
+                <div class="brand-title">WHYDIE PALL <span>V1.0</span></div>
+                <div class="brand-subtitle">Dashboard Panel</div>
+            </div>
+
+            <div style="text-align: center; margin-bottom: 20px; font-family: 'Inter', sans-serif;">
+                <p style="font-size: 14px; color: #ffffff;">Selamat Datang, <span id="dashUser" style="color: #00d2ff; font-weight: bold;">User</span>!</p>
+                <p style="font-size: 11px; color: #00ff88; margin-top: 6px;">Status: Active</p>
+            </div>
+
+            <button type="button" class="submit-btn" style="background: #ff4d4d; color: #ffffff; box-shadow: 0 0 15px rgba(255, 77, 77, 0.3);" onclick="handleLogout()">LOGOUT</button>
         </div>
 
         <!-- Contact Section -->
@@ -184,7 +377,7 @@
 
     </div>
 
-    <!-- Script JavaScript Utama -->
+    <!-- Script Utama Eksternal -->
     <script src="script.js"></script>
 
 </body>
