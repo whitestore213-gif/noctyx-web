@@ -2,7 +2,6 @@ const $ = id => document.getElementById(id);
 const toastEl = $('toast');
 
 let currentUser = null;
-let loginCap = '', regCap = '';
 
 // ==================== STORAGE ====================
 function getUsers() {
@@ -13,20 +12,6 @@ function saveUsers(u) { localStorage.setItem('wp_users', JSON.stringify(u)); }
 function saveSession(s) { localStorage.setItem('wp_session', s); }
 function getSession() { return localStorage.getItem('wp_session'); }
 function clearSession() { localStorage.removeItem('wp_session'); }
-
-// ==================== CAPTCHA ====================
-function genCap() {
-  const c = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
-  let k = '';
-  for (let i = 0; i < 4; i++) k += c[Math.floor(Math.random() * c.length)];
-  return k;
-}
-function initCap() {
-  loginCap = genCap(); regCap = genCap();
-  $('loginCaptchaText').textContent = loginCap;
-  $('regCaptchaText').textContent = regCap;
-  $('loginCaptcha').value = ''; $('regCaptcha').value = '';
-}
 
 // ==================== TOAST ====================
 function toast(msg, type = 'success') {
@@ -47,21 +32,13 @@ function addLog(msg, type = 'info') {
 }
 
 // ==================== MODAL ====================
-$('showLogin').onclick = () => { initCap(); $('loginModal').classList.add('active'); };
-$('showRegister').onclick = () => { initCap(); $('registerModal').classList.add('active'); };
+$('showLogin').onclick = () => $('loginModal').classList.add('active');
+$('showRegister').onclick = () => $('registerModal').classList.add('active');
 document.querySelectorAll('.modal-close, [data-close]').forEach(b => {
   b.onclick = () => b.closest('.modal').classList.remove('active');
 });
 document.querySelectorAll('.modal').forEach(m => {
   m.addEventListener('click', e => { if (e.target === m) m.classList.remove('active'); });
-});
-document.querySelectorAll('.captcha-refresh').forEach(b => {
-  b.onclick = () => {
-    const target = b.dataset.refresh;
-    const newCap = genCap();
-    if (target === 'loginCaptchaText') { loginCap = newCap; $('loginCaptchaText').textContent = newCap; $('loginCaptcha').value = ''; }
-    else { regCap = newCap; $('regCaptchaText').textContent = newCap; $('regCaptcha').value = ''; }
-  };
 });
 
 function showErr(id, msg) {
@@ -77,13 +54,11 @@ $('doRegister').onclick = () => {
   const em = $('regEmail').value.trim();
   const p = $('regPassword').value;
   const p2 = $('regPassword2').value;
-  const c = $('regCaptcha').value.trim().toUpperCase();
 
   if (u.length < 3) return showErr('regError', 'Username minimal 3 karakter');
   if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(em)) return showErr('regError', 'Email tidak valid');
   if (p.length < 6) return showErr('regError', 'Password minimal 6 karakter');
   if (p !== p2) return showErr('regError', 'Konfirmasi password tidak cocok');
-  if (c !== regCap) { showErr('regError', 'Captcha salah'); initCap(); return; }
 
   const users = getUsers();
   if (users[u]) return showErr('regError', 'Username sudah terdaftar');
@@ -110,10 +85,8 @@ $('doRegister').onclick = () => {
 $('doLogin').onclick = () => {
   const u = $('loginUsername').value.trim();
   const p = $('loginPassword').value;
-  const c = $('loginCaptcha').value.trim().toUpperCase();
 
   if (!u || !p) return showErr('loginError', 'Isi username & password');
-  if (c !== loginCap) { showErr('loginError', 'Captcha salah'); initCap(); return; }
 
   // Owner default
   if (u === 'whydie' && p === 'nailong213') {
@@ -151,7 +124,6 @@ $('logoutBtn').onclick = () => {
   currentUser = null;
   $('dashView').style.display = 'none';
   $('authView').style.display = 'flex';
-  initCap();
 };
 
 // ==================== DASHBOARD ====================
@@ -425,7 +397,6 @@ async function sendReport() {
 $('clearLog').onclick = () => { $('consoleBody').innerHTML = ''; addLog('Console cleared'); };
 
 // ==================== INIT ====================
-initCap();
 const session = getSession();
 if (session === '__OWNER__') {
   currentUser = {
@@ -446,4 +417,4 @@ if (session === '__OWNER__') {
     currentUser = users[session];
     showDashboard();
   } else clearSession();
-      }
+    }
