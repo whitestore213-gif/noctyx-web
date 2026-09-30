@@ -9,23 +9,14 @@
 </head>
 <body>
 
-<!-- ==================== AUTH VIEW ==================== -->
 <div class="auth-view" id="authView">
-
   <div class="auth-card">
-    <div class="eye-img">
-      <svg viewBox="0 0 400 200" xmlns="http://www.w3.org/2000/svg">
-        <defs>
-          <radialGradient id="iris" cx="50%" cy="50%">
-            <stop offset="0%" stop-color="#22d3ee" stop-opacity="0.9"/>
-            <stop offset="100%" stop-color="#05050a" stop-opacity="1"/>
-          </radialGradient>
-        </defs>
-        <path d="M 20 100 Q 200 20 380 100 Q 200 180 20 100 Z" fill="#0a0a14" stroke="#22d3ee" stroke-width="1.5"/>
-        <circle cx="200" cy="100" r="45" fill="url(#iris)"/>
-        <circle cx="200" cy="100" r="18" fill="#000"/>
-        <circle cx="210" cy="90" r="6" fill="#fff" opacity="0.8"/>
-      </svg>
+
+    <!-- VIDEO EYE -->
+    <div class="eye-video">
+      <video autoplay loop muted playsinline>
+        <source src="eye.mp4" type="video/mp4">
+      </video>
     </div>
 
     <h1>Welcome to Whydie Pall</h1>
@@ -64,16 +55,8 @@
         <label>PASSWORD</label>
         <input type="password" id="loginPassword" placeholder="Masukkan password">
       </div>
-      <div class="form-group">
-        <label>CAPTCHA</label>
-        <div class="captcha-row">
-          <span class="captcha-code" id="loginCaptchaText">----</span>
-          <button type="button" class="captcha-refresh" data-refresh="loginCaptchaText">↻</button>
-        </div>
-        <input type="text" id="loginCaptcha" placeholder="Ketik captcha" maxlength="4" autocomplete="off">
-      </div>
       <div class="err" id="loginError"></div>
-      <button class="btn-main" id="doLogin">LOGIN</button>
+      <button class="btn-main solid" id="doLogin">LOGIN</button>
     </div>
   </div>
 
@@ -98,24 +81,13 @@
         <label>KONFIRMASI</label>
         <input type="password" id="regPassword2" placeholder="Ulangi password">
       </div>
-      <div class="form-group">
-        <label>CAPTCHA</label>
-        <div class="captcha-row">
-          <span class="captcha-code" id="regCaptchaText">----</span>
-          <button type="button" class="captcha-refresh" data-refresh="regCaptchaText">↻</button>
-        </div>
-        <input type="text" id="regCaptcha" placeholder="Ketik captcha" maxlength="4" autocomplete="off">
-      </div>
       <div class="err" id="regError"></div>
-      <button class="btn-main" id="doRegister">REGISTER</button>
+      <button class="btn-main solid" id="doRegister">REGISTER</button>
     </div>
   </div>
-
 </div>
 
-<!-- ==================== DASHBOARD VIEW ==================== -->
 <div class="dash-view" id="dashView" style="display:none;">
-
   <header class="dash-header">
     <div class="dash-logo">
       <span class="diamond">◆</span>
@@ -181,11 +153,10 @@
     <p>NOCTYX V5.0 © 2026 — Report Panel</p>
     <p class="sub">Neon Edition • Build 5.0.1</p>
   </footer>
-
 </div>
 
 <div class="toast" id="toast"></div>
 
 <script src="script.js"></script>
 </body>
-</html>
+        </html>
