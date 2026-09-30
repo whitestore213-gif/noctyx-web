@@ -3,29 +3,59 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>WHYDIE PALL V1.0 — Report Panel Access</title>
+<title>Whydie Pall — Report Panel</title>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-<div class="bg-layer"></div>
+<!-- ==================== AUTH VIEW ==================== -->
+<div class="auth-view" id="authView">
 
-<div class="auth-wrapper" id="authWrapper">
-  <div class="auth-box">
-
-    <div class="auth-header">
-      <div class="auth-icon">◆</div>
-      <h1>WHYDIE PALL <span class="ver">V1.0</span></h1>
-      <p>Report Panel Access</p>
+  <div class="auth-card">
+    <div class="eye-img">
+      <svg viewBox="0 0 400 200" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <radialGradient id="iris" cx="50%" cy="50%">
+            <stop offset="0%" stop-color="#22d3ee" stop-opacity="0.9"/>
+            <stop offset="100%" stop-color="#05050a" stop-opacity="1"/>
+          </radialGradient>
+        </defs>
+        <path d="M 20 100 Q 200 20 380 100 Q 200 180 20 100 Z" fill="#0a0a14" stroke="#22d3ee" stroke-width="1.5"/>
+        <circle cx="200" cy="100" r="45" fill="url(#iris)"/>
+        <circle cx="200" cy="100" r="18" fill="#000"/>
+        <circle cx="210" cy="90" r="6" fill="#fff" opacity="0.8"/>
+      </svg>
     </div>
 
-    <div class="auth-tabs">
-      <button class="auth-tab active" data-tab="login">LOGIN</button>
-      <button class="auth-tab" data-tab="register">REGISTER</button>
+    <h1>Welcome to Whydie Pall</h1>
+    <p class="subtitle">Please log in or register to continue</p>
+
+    <div class="auth-actions">
+      <button class="btn-main" id="showLogin">Login</button>
+      <button class="btn-outline" id="showRegister">Register</button>
     </div>
 
-    <form class="auth-form active" id="loginForm">
+    <div class="contact-us">
+      <p class="label">Contact Us</p>
+      <div class="icons">
+        <a href="https://t.me/mrwhy016" target="_blank" class="icon-btn">
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M9.78 18.65l.28-4.23 7.68-6.92c.34-.31-.07-.46-.52-.19L7.74 13.3 3.64 12c-.88-.25-.89-.86.2-1.3l15.97-6.16c.73-.33 1.43.18 1.15 1.3l-2.72 12.81c-.19.91-.74 1.13-1.5.71L12.6 16.3l-1.99 1.93c-.23.23-.42.42-.83.42z"/></svg>
+        </a>
+        <a href="#" target="_blank" class="icon-btn">
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M19.59 6.69a4.83 4.83 0 01-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 01-5.2 1.74 2.89 2.89 0 012.31-4.64 2.93 2.93 0 01.88.13V9.4a6.84 6.84 0 00-1-.05A6.33 6.33 0 005.99 20a6.34 6.34 0 0010.86-4.43v-7a8.16 8.16 0 004.77 1.52v-3.4a4.85 4.85 0 01-1.03 0z"/></svg>
+        </a>
+      </div>
+    </div>
+
+    <p class="copyright">© 2026 Whydie Pall</p>
+  </div>
+
+  <!-- LOGIN MODAL -->
+  <div class="modal" id="loginModal">
+    <div class="modal-box">
+      <button class="modal-close" data-close>&times;</button>
+      <h2>Login</h2>
       <div class="form-group">
         <label>USERNAME</label>
         <input type="text" id="loginUsername" placeholder="Masukkan username" autocomplete="off">
@@ -36,95 +66,126 @@
       </div>
       <div class="form-group">
         <label>CAPTCHA</label>
-        <div class="captcha-box">
-          <span class="captcha-text" id="loginCaptchaCode">----</span>
-          <button type="button" class="captcha-refresh" id="loginCaptchaRefresh">↻</button>
+        <div class="captcha-row">
+          <span class="captcha-code" id="loginCaptchaText">----</span>
+          <button type="button" class="captcha-refresh" data-refresh="loginCaptchaText">↻</button>
         </div>
-        <input type="text" id="loginCaptcha" placeholder="Ketik captcha di atas" maxlength="4" autocomplete="off">
+        <input type="text" id="loginCaptcha" placeholder="Ketik captcha" maxlength="4" autocomplete="off">
       </div>
-      <div class="error-msg" id="loginError"></div>
-      <button type="submit" class="btn-primary">LOGIN</button>
-      <p class="switch-link">Belum punya akun? <a href="#" id="toRegister">Register di sini</a></p>
-    </form>
+      <div class="err" id="loginError"></div>
+      <button class="btn-main" id="doLogin">LOGIN</button>
+    </div>
+  </div>
 
-    <form class="auth-form" id="registerForm">
+  <!-- REGISTER MODAL -->
+  <div class="modal" id="registerModal">
+    <div class="modal-box">
+      <button class="modal-close" data-close>&times;</button>
+      <h2>Register</h2>
       <div class="form-group">
         <label>USERNAME</label>
-        <input type="text" id="regUsername" placeholder="Masukkan username" autocomplete="off">
+        <input type="text" id="regUsername" placeholder="Minimal 3 karakter" autocomplete="off">
       </div>
       <div class="form-group">
         <label>EMAIL</label>
-        <input type="email" id="regEmail" placeholder="Masukkan email" autocomplete="off">
+        <input type="email" id="regEmail" placeholder="email@gmail.com" autocomplete="off">
       </div>
       <div class="form-group">
         <label>PASSWORD</label>
         <input type="password" id="regPassword" placeholder="Minimal 6 karakter">
       </div>
       <div class="form-group">
-        <label>KONFIRMASI PASSWORD</label>
+        <label>KONFIRMASI</label>
         <input type="password" id="regPassword2" placeholder="Ulangi password">
       </div>
       <div class="form-group">
         <label>CAPTCHA</label>
-        <div class="captcha-box">
-          <span class="captcha-text" id="regCaptchaCode">----</span>
-          <button type="button" class="captcha-refresh" id="regCaptchaRefresh">↻</button>
+        <div class="captcha-row">
+          <span class="captcha-code" id="regCaptchaText">----</span>
+          <button type="button" class="captcha-refresh" data-refresh="regCaptchaText">↻</button>
         </div>
-        <input type="text" id="regCaptcha" placeholder="Ketik captcha di atas" maxlength="4" autocomplete="off">
+        <input type="text" id="regCaptcha" placeholder="Ketik captcha" maxlength="4" autocomplete="off">
       </div>
-      <div class="error-msg" id="regError"></div>
-      <button type="submit" class="btn-primary">REGISTER</button>
-      <p class="switch-link">Sudah punya akun? <a href="#" id="toLogin">Login di sini</a></p>
-    </form>
-
-    <div class="auth-footer">
-      <p>© 2026 Whydie Pall</p>
-      <div class="contact-links">
-        <a href="https://t.me/mrwhy016" target="_blank">Telegram</a>
-        <a href="#" target="_blank">TikTok</a>
-      </div>
+      <div class="err" id="regError"></div>
+      <button class="btn-main" id="doRegister">REGISTER</button>
     </div>
-
   </div>
+
 </div>
 
-<div class="dashboard" id="dashboard" style="display:none;">
-  <div class="dash-header">
-    <h2>WHYDIE PALL PANEL</h2>
-    <p>Selamat Datang, <span id="userName">User</span>!</p>
-    <button id="logoutBtn" class="btn-logout">LOGOUT</button>
-  </div>
-  <div class="dash-stats">
-    <div class="stat-card">
-      <span class="stat-label">STATUS</span>
-      <span class="stat-value active">Active</span>
+<!-- ==================== DASHBOARD VIEW ==================== -->
+<div class="dash-view" id="dashView" style="display:none;">
+
+  <header class="dash-header">
+    <div class="dash-logo">
+      <span class="diamond">◆</span>
+      <div>
+        <h1>NOCTYX <span>V5.0</span></h1>
+        <p>Report Panel — Neon Edition</p>
+      </div>
     </div>
-    <div class="stat-card">
-      <span class="stat-label">TOTAL REPORT</span>
-      <span class="stat-value" id="totalReport">0</span>
+    <div class="dash-header-right">
+      <span class="online-badge">● ONLINE</span>
+      <button class="btn-logout" id="logoutBtn">X</button>
     </div>
-  </div>
-  <div class="dash-form">
-    <div class="form-group">
-      <label>TARGET ACCOUNT / URL</label>
-      <input type="text" id="targetUrl" placeholder="https://tiktok.com/@target">
+  </header>
+
+  <section class="info-panel">
+    <div class="info-title">[ INFO PENGGUNA ]</div>
+    <div class="info-grid">
+      <div class="info-row"><span class="label">USER</span><span class="value" id="dashUser">-</span></div>
+      <div class="info-row"><span class="label">ID</span><span class="value" id="dashId">-</span></div>
+      <div class="info-row"><span class="label">ROLE</span><span class="value cyan" id="dashRole">USER</span></div>
+      <div class="info-row"><span class="label">REPORT</span><span class="value" id="dashReport">0 email</span></div>
+      <div class="info-row"><span class="label">EMAIL</span><span class="value" id="dashEmail">0 terdaftar</span></div>
+      <div class="info-row"><span class="label">LIMIT</span><span class="value" id="dashLimit">5/5</span></div>
+      <div class="info-row full"><span class="label">STATUS</span><span class="value green">Terverifikasi</span></div>
     </div>
-    <div class="form-group">
-      <label>REPORT CATEGORY</label>
-      <select id="reportCategory">
-        <option value="spam">Spam / Fake Account</option>
-        <option value="harassment">Harassment / Bullying</option>
-        <option value="hate">Hate Speech</option>
-        <option value="violence">Violence / Dangerous</option>
-        <option value="scam">Scam / Fraud</option>
-      </select>
+    <div class="info-footer">● Unlimited Report Aktif!</div>
+  </section>
+
+  <section class="menu-grid">
+    <button class="menu-btn" data-menu="gmail">Gmail Manager</button>
+    <button class="menu-btn" data-menu="report">Gas Report</button>
+    <button class="menu-btn" data-menu="progress">Progress Report</button>
+    <button class="menu-btn" data-menu="stats">Statistik Email</button>
+    <button class="menu-btn" data-menu="session">Sesi</button>
+    <button class="menu-btn" data-menu="role">Up Role</button>
+    <button class="menu-btn" data-menu="limit">My Limit</button>
+    <button class="menu-btn" data-menu="donasi">Donasi</button>
+    <button class="menu-btn" data-menu="qris">QRIS</button>
+    <button class="menu-btn" data-menu="owner">Chat Owner</button>
+  </section>
+
+  <section class="workspace" id="workspace">
+    <div class="ws-placeholder">
+      <div class="ws-icon">◇</div>
+      <p>Pilih menu di atas untuk memulai</p>
     </div>
-    <button id="sendReportBtn" class="btn-primary">SEND REPORT</button>
-  </div>
+  </section>
+
+  <section class="console">
+    <div class="console-header">
+      <span class="dot red"></span>
+      <span class="dot yellow"></span>
+      <span class="dot green"></span>
+      <span class="console-title">system.log</span>
+      <button class="console-clear" id="clearLog">CLEAR</button>
+    </div>
+    <div class="console-body" id="consoleBody">
+      <div class="log info">[SYSTEM] NOCTYX V5.0 initialized...</div>
+    </div>
+  </section>
+
+  <footer class="dash-footer">
+    <p>NOCTYX V5.0 © 2026 — Report Panel</p>
+    <p class="sub">Neon Edition • Build 5.0.1</p>
+  </footer>
+
 </div>
 
 <div class="toast" id="toast"></div>
 
 <script src="script.js"></script>
 </body>
-    </html>
+</html>
