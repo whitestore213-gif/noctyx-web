@@ -4,11 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Whydie Pall V1</title>
-    <!-- FontAwesome Icon -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <!-- Google Font Monospace & Inter -->
     <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <!-- Style CSS Utama -->
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
@@ -53,7 +50,7 @@
                 <input type="password" id="loginPassword" class="form-input" placeholder="Masukkan password">
             </div>
 
-            <button type="button" class="submit-btn" onclick="handleLogin()">LOGIN</button>
+            <button type="button" class="submit-btn" onclick="handleAuth('login')">LOGIN</button>
             <button type="button" class="btn-close" onclick="closeAllForms()">&larr; Kembali ke menu utama</button>
         </div>
 
@@ -81,48 +78,25 @@
                 <input type="password" id="regConfirmPassword" class="form-input" placeholder="Ulangi password">
             </div>
 
-            <button type="button" class="submit-btn" onclick="handleRegister()">REGISTER</button>
+            <button type="button" class="submit-btn" onclick="handleAuth('register')">REGISTER</button>
             <button type="button" class="btn-close" onclick="closeAllForms()">&larr; Kembali ke menu utama</button>
         </div>
 
-        <!-- DASHBOARD PANEL LENGKAP -->
-        <div class="dashboard-card" id="dashboardCard">
+        <!-- PANEL DASHBOARD -->
+        <div class="form-card" id="dashboardCard" style="display: none;">
             <div class="neon-diamond"></div>
+            
             <div class="brand-header">
-                <div class="brand-title">WHYDIE PALL <span>PANEL</span></div>
-                <div class="brand-subtitle">Welcome back, <span id="userDisplay" style="color:#00d2ff; font-weight: bold;">User</span>!</div>
+                <div class="brand-title">WHYDIE PALL <span>V1.0</span></div>
+                <div class="brand-subtitle">Dashboard Panel</div>
             </div>
 
-            <!-- Ringkasan Statistik -->
-            <div class="dashboard-stats" style="display: flex; gap: 10px; width: 100%; margin-bottom: 15px;">
-                <div style="flex: 1; background: #090a0d; border: 1px solid rgba(255,255,255,0.08); padding: 10px; border-radius: 8px; text-align: center;">
-                    <span style="font-size: 10px; color: #8a94a6;">STATUS</span>
-                    <p style="font-size: 12px; color: #00ff88; font-weight: bold; margin-top: 4px;">ACTIVE</p>
-                </div>
-                <div style="flex: 1; background: #090a0d; border: 1px solid rgba(255,255,255,0.08); padding: 10px; border-radius: 8px; text-align: center;">
-                    <span style="font-size: 10px; color: #8a94a6;">TOTAL REPORT</span>
-                    <p style="font-size: 12px; color: #00d2ff; font-weight: bold; margin-top: 4px;">128</p>
-                </div>
+            <div style="text-align: center; margin-bottom: 20px; font-family: 'Inter', sans-serif;">
+                <p style="font-size: 14px; color: #fff;">Selamat Datang, <span id="dashUser" style="color: #00d2ff;">User</span>!</p>
+                <p style="font-size: 11px; color: #00ff88; margin-top: 5px;">Status: Active</p>
             </div>
 
-            <!-- Form Submit Report -->
-            <div class="form-group">
-                <label class="form-label">Target Account / URL</label>
-                <input type="text" class="form-input" placeholder="https://tiktok.com/@target">
-            </div>
-
-            <div class="form-group">
-                <label class="form-label">Report Category</label>
-                <select class="form-input" style="background: #090a0d; color: #fff;">
-                    <option>Spam / Fake Account</option>
-                    <option>Harassment / Bullying</option>
-                    <option>Inappropriate Content</option>
-                </select>
-            </div>
-
-            <button type="button" class="submit-btn" style="margin-bottom: 15px;" onclick="alert('Report submitted successfully!')">SEND REPORT</button>
-
-            <button type="button" class="logout-btn" onclick="handleLogout()">LOGOUT</button>
+            <button type="button" class="submit-btn" style="background: #ff4d4d; color: #fff;" onclick="closeAllForms()">LOGOUT</button>
         </div>
 
         <!-- Contact Section -->
@@ -143,8 +117,50 @@
 
     </div>
 
-    <!-- Script JavaScript Utama -->
-    <script src="script.js"></script>
+    <!-- Script Kontrol Interaksi -->
+    <script>
+        function openLoginForm() {
+            document.getElementById('menuBox').style.display = 'none';
+            document.getElementById('welcomeText').style.display = 'none';
+            document.getElementById('registerFormCard').style.display = 'none';
+            document.getElementById('dashboardCard').style.display = 'none';
+            document.getElementById('loginFormCard').style.display = 'flex';
+        }
 
+        function openRegisterForm() {
+            document.getElementById('menuBox').style.display = 'none';
+            document.getElementById('welcomeText').style.display = 'none';
+            document.getElementById('loginFormCard').style.display = 'none';
+            document.getElementById('dashboardCard').style.display = 'none';
+            document.getElementById('registerFormCard').style.display = 'flex';
+        }
+
+        function closeAllForms() {
+            document.getElementById('loginFormCard').style.display = 'none';
+            document.getElementById('registerFormCard').style.display = 'none';
+            document.getElementById('dashboardCard').style.display = 'none';
+            document.getElementById('menuBox').style.display = 'flex';
+            document.getElementById('welcomeText').style.display = 'block';
+        }
+
+        function handleAuth(type) {
+            let username = "";
+            if (type === 'login') {
+                username = document.getElementById('loginUsername').value;
+            } else {
+                username = document.getElementById('regUsername').value;
+            }
+
+            if (!username) {
+                username = "User";
+            }
+
+            // Sembunyikan form dan tampilkan Dashboard
+            document.getElementById('loginFormCard').style.display = 'none';
+            document.getElementById('registerFormCard').style.display = 'none';
+            document.getElementById('dashUser').innerText = username;
+            document.getElementById('dashboardCard').style.display = 'flex';
+        }
+    </script>
 </body>
 </html>
