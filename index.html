@@ -1,110 +1,380 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>NOCTYX V5.0 — Report Panel</title>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="style.css" />
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Whydie Pall V1 - Report Panel</title>
+    <!-- FontAwesome Font Icon -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Font Monospace & Inter -->
+    <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', sans-serif;
+        }
+
+        body {
+            background-color: #0b0c10;
+            color: #d8d8d8;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px 0;
+        }
+
+        .main-container {
+            width: 90%;
+            max-width: 380px;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        /* Banner Video Estetik Atas */
+        .video-card {
+            width: 100%;
+            height: 150px;
+            border-radius: 16px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .card-video {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+        }
+
+        /* Card Form Login Utama */
+        .auth-card {
+            background: #12141a;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 20px;
+            padding: 24px 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+        }
+
+        /* Logo Diamond Neon */
+        .neon-diamond {
+            width: 16px;
+            height: 16px;
+            background: #00d2ff;
+            transform: rotate(45deg);
+            box-shadow: 0 0 12px #00d2ff;
+            margin-bottom: 12px;
+        }
+
+        .brand-header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .brand-title {
+            font-size: 20px;
+            font-weight: 700;
+            color: #ffffff;
+            letter-spacing: 1px;
+        }
+
+        .brand-title span {
+            color: #00d2ff;
+            font-size: 13px;
+            margin-left: 4px;
+        }
+
+        .brand-subtitle {
+            font-size: 11px;
+            color: #6c757d;
+            margin-top: 4px;
+        }
+
+        /* Toggle Tab Login / Register */
+        .tab-switcher {
+            width: 100%;
+            background: #090a0d;
+            border-radius: 10px;
+            padding: 4px;
+            display: flex;
+            gap: 4px;
+            margin-bottom: 20px;
+        }
+
+        .tab-btn {
+            flex: 1;
+            padding: 10px 0;
+            border: none;
+            background: transparent;
+            color: #6c757d;
+            font-size: 12px;
+            font-weight: 600;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .tab-btn.active {
+            background: #00d2ff;
+            color: #000000;
+            box-shadow: 0 0 10px rgba(0, 210, 255, 0.4);
+        }
+
+        /* Form Group Input */
+        .form-group {
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            margin-bottom: 14px;
+        }
+
+        .form-label {
+            font-size: 10px;
+            font-weight: 600;
+            color: #8a94a6;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+        }
+
+        .form-input {
+            width: 100%;
+            background: #090a0d;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 8px;
+            padding: 12px;
+            color: #ffffff;
+            font-size: 12px;
+            outline: none;
+            transition: border-color 0.3s;
+        }
+
+        .form-input:focus {
+            border-color: #00d2ff;
+        }
+
+        .form-input::placeholder {
+            color: #4a505e;
+        }
+
+        /* Captcha Box */
+        .captcha-wrapper {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 6px;
+        }
+
+        .captcha-box {
+            flex: 1;
+            background: #090a0d;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 8px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-family: 'Share Tech Mono', monospace;
+            font-size: 16px;
+            letter-spacing: 4px;
+            color: #00d2ff;
+            font-weight: bold;
+            user-select: none;
+        }
+
+        .captcha-refresh {
+            background: #090a0d;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 8px;
+            width: 42px;
+            color: #6c757d;
+            cursor: pointer;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 12px;
+        }
+
+        /* Main Action Button */
+        .submit-btn {
+            width: 100%;
+            padding: 12px;
+            background: #00d2ff;
+            border: none;
+            border-radius: 8px;
+            color: #000000;
+            font-size: 12px;
+            font-weight: 700;
+            letter-spacing: 1px;
+            cursor: pointer;
+            margin-top: 10px;
+            box-shadow: 0 0 15px rgba(0, 210, 255, 0.3);
+            transition: all 0.3s;
+        }
+
+        .submit-btn:hover {
+            background: #00b8e6;
+            box-shadow: 0 0 20px rgba(0, 210, 255, 0.5);
+        }
+
+        /* Text Footer Form */
+        .auth-footer {
+            margin-top: 16px;
+            font-size: 11px;
+            color: #6c757d;
+            text-align: center;
+        }
+
+        .auth-footer a {
+            color: #00d2ff;
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .status-badge {
+            margin-top: 20px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 10px;
+            color: #555d6d;
+        }
+
+        .status-dot {
+            width: 6px;
+            height: 6px;
+            background: #22c55e;
+            border-radius: 50%;
+            box-shadow: 0 0 6px #22c55e;
+        }
+
+        /* Contact Section Minimalis */
+        .contact-box {
+            width: 100%;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 16px;
+            padding: 14px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
+            background: #12141a;
+        }
+
+        .contact-box span {
+            font-size: 11px;
+            color: #6c757d;
+        }
+
+        .social-icons {
+            display: flex;
+            gap: 12px;
+        }
+
+        .icon-circle {
+            width: 36px;
+            height: 36px;
+            background-color: #ffffff;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: #000000;
+            font-size: 16px;
+            text-decoration: none;
+        }
+
+        .copyright {
+            font-size: 10px;
+            color: #4a505e;
+        }
+    </style>
 </head>
 <body>
 
-<div class="auth-wrapper" id="authWrapper">
-  <div class="auth-box">
-    <div class="auth-logo">
-      <span class="logo-icon">◆</span>
-      <h1>NOCTYX <span class="ver">V5.0</span></h1>
-      <p>Report Panel — Neon Edition</p>
-    </div>
-    <div class="auth-tabs">
-      <button class="auth-tab active" data-tab="login">LOGIN</button>
-      <button class="auth-tab" data-tab="register">REGISTER</button>
-    </div>
-    <form class="auth-form active" id="loginForm">
-      <div class="fg"><label>USERNAME</label><input type="text" id="loginUsername" placeholder="Masukkan username"/></div>
-      <div class="fg"><label>PASSWORD</label><input type="password" id="loginPassword" placeholder="Masukkan password"/></div>
-      <div class="fg"><label>CAPTCHA VERIFICATION</label>
-        <div class="captcha-box"><div class="captcha-code" id="loginCaptchaCode">----</div><button type="button" class="captcha-refresh" id="loginCaptchaRefresh">↻</button></div>
-        <input type="text" id="loginCaptcha" placeholder="Masukkan kode captcha" maxlength="4"/>
-      </div>
-      <div class="error-msg" id="loginError"></div>
-      <button type="submit" class="action-btn">LOGIN</button>
-      <p class="auth-switch">Belum punya akun? <a href="#" id="switchToRegister">Register sekarang</a></p>
-    </form>
-    <form class="auth-form" id="registerForm">
-      <div class="fg"><label>USERNAME</label><input type="text" id="regUsername" placeholder="Minimal 3 karakter"/></div>
-      <div class="fg"><label>EMAIL</label><input type="email" id="regEmail" placeholder="email@gmail.com"/></div>
-      <div class="fg"><label>PASSWORD</label><input type="password" id="regPassword" placeholder="Minimal 6 karakter"/></div>
-      <div class="fg"><label>KONFIRMASI PASSWORD</label><input type="password" id="regPassword2" placeholder="Ulangi password"/></div>
-      <div class="fg"><label>CAPTCHA VERIFICATION</label>
-        <div class="captcha-box"><div class="captcha-code" id="regCaptchaCode">----</div><button type="button" class="captcha-refresh" id="regCaptchaRefresh">↻</button></div>
-        <input type="text" id="regCaptcha" placeholder="Masukkan kode captcha" maxlength="4"/>
-      </div>
-      <div class="error-msg" id="regError"></div>
-      <button type="submit" class="action-btn">REGISTER</button>
-      <p class="auth-switch">Sudah punya akun? <a href="#" id="switchToLogin">Login di sini</a></p>
-    </form>
-    <div class="auth-footer"><span class="dot-green"></span> Secure Authentication Active</div>
-  </div>
-</div>
+    <div class="main-container">
+        
+        <!-- Header Video -->
+        <div class="video-card">
+            <video class="card-video" autoplay loop muted playsinline>
+                <source src="video.mp4" type="video/mp4">
+            </video>
+        </div>
 
-<div class="container" id="dashboard" style="display:none">
-  <header class="header">
-    <div class="logo"><span class="logo-icon">◆</span>
-      <div class="logo-text"><h1>NOCTYX <span class="ver">V5.0</span></h1><p>Report Panel — Neon Edition</p></div>
-    </div>
-    <div class="header-right">
-      <div class="status-badge"><span class="dot"></span> ONLINE</div>
-      <button class="logout-btn" id="logoutBtn" title="Logout">X</button>
-    </div>
-  </header>
-  <section class="info-panel">
-    <div class="info-header"><span class="bracket">[</span><span class="title">INFO PENGGUNA</span><span class="bracket">]</span></div>
-    <div class="info-grid">
-      <div class="info-item"><span class="label">USER</span><span class="value" id="userName">Guest</span></div>
-      <div class="info-item"><span class="label">ID</span><span class="value" id="userId">-</span></div>
-      <div class="info-item"><span class="label">ROLE</span><span class="value role-user" id="userRole">USER</span></div>
-      <div class="info-item"><span class="label">REPORT</span><span class="value" id="reportCount">0 email</span></div>
-      <div class="info-item"><span class="label">EMAIL</span><span class="value" id="emailCount">0 terdaftar</span></div>
-      <div class="info-item"><span class="label">LIMIT</span><span class="value" id="userLimit">5/5</span></div>
-      <div class="info-item full"><span class="label">STATUS</span><span class="value status-verified">Terverifikasi</span></div>
-    </div>
-    <div class="info-footer"><span class="dot-green"></span> Unlimited Report Aktif!</div>
-  </section>
-  <section class="menu-grid">
-    <button class="neon-btn btn-cyan" data-menu="gmail"><span class="btn-text">Gmail Manager</span></button>
-    <button class="neon-btn btn-red" data-menu="report"><span class="btn-text">Gas Report</span></button>
-    <button class="neon-btn btn-purple" data-menu="progress"><span class="btn-text">Progress Report</span></button>
-    <button class="neon-btn btn-orange" data-menu="stats"><span class="btn-text">Statistik Email</span></button>
-    <button class="neon-btn btn-pink" data-menu="session"><span class="btn-text">Sesi</span></button>
-    <button class="neon-btn btn-yellow" data-menu="role"><span class="btn-text">Up Role</span></button>
-    <button class="neon-btn btn-blue" data-menu="limit"><span class="btn-text">My Limit</span></button>
-    <button class="neon-btn btn-green" data-menu="donasi"><span class="btn-text">Donasi</span></button>
-    <button class="neon-btn btn-teal" data-menu="qris"><span class="btn-text">QRIS</span></button>
-    <button class="neon-btn btn-gold" data-menu="owner"><span class="btn-text">Chat Owner</span></button>
-    <button class="neon-btn btn-silver" data-menu="akun"><span class="btn-text">Cek Akun</span></button>
-    <button class="neon-btn btn-lime" data-menu="referral"><span class="btn-text">Referral</span></button>
-  </section>
-  <section class="workspace" id="workspace">
-    <div class="workspace-placeholder"><div class="placeholder-icon">◇</div><p>Pilih menu di atas untuk memulai</p></div>
-  </section>
-  <section class="console">
-    <div class="console-header"><span class="console-dot red"></span><span class="console-dot yellow"></span><span class="console-dot green"></span><span class="console-title">system.log</span><button class="console-clear" id="clearLog">CLEAR</button></div>
-    <div class="console-body" id="consoleBody"><div class="log-line info">[SYSTEM] NOCTYX V5.0 initialized...</div></div>
-  </section>
-  <footer class="footer">
-    <p>NOCTYX V5.0 © 2026 — Report Panel</p>
-    <p class="footer-sub">Neon Edition • Build 5.0.1</p>
-    <div class="footer-links">
-      <a href="https://saweria.co/why01" target="_blank" rel="noopener">Saweria: saweria.co/why01</a>
-      <span>|</span>
-      <a href="https://t.me/mrwhy016" target="_blank" rel="noopener">Telegram: @mrwhy016</a>
-    </div>
-  </footer>
-</div>
+        <!-- Card Form Neon (Foto 2) -->
+        <div class="auth-card">
+            <div class="neon-diamond"></div>
+            
+            <div class="brand-header">
+                <div class="brand-title">WHYDIE PALL <span>V1.0</span></div>
+                <div class="brand-subtitle">Report Panel — Neon Edition</div>
+            </div>
 
-<div class="toast" id="toast"><span class="toast-icon" id="toastIcon">OK</span><span class="toast-msg" id="toastMsg">Berhasil!</span></div>
+            <!-- Tab Switcher -->
+            <div class="tab-switcher">
+                <button class="tab-btn active">LOGIN</button>
+                <button class="tab-btn">REGISTER</button>
+            </div>
 
-<script src="script.js"></script>
+            <!-- Input Username -->
+            <div class="form-group">
+                <label class="form-label">Username</label>
+                <input type="text" class="form-input" placeholder="Masukkan username">
+            </div>
+
+            <!-- Input Password -->
+            <div class="form-group">
+                <label class="form-label">Password</label>
+                <input type="password" class="form-input" placeholder="Masukkan password">
+            </div>
+
+            <!-- Input Captcha -->
+            <div class="form-group">
+                <label class="form-label">Captcha Verification</label>
+                <div class="captcha-wrapper">
+                    <div class="captcha-box">E W B X</div>
+                    <button class="captcha-refresh" type="button"><i class="fa-solid fa-rotate-right"></i></button>
+                </div>
+                <input type="text" class="form-input" placeholder="Masukkan kode captcha">
+            </div>
+
+            <!-- Button Submit -->
+            <button type="button" class="submit-btn">LOGIN</button>
+
+            <!-- Bottom Link -->
+            <div class="auth-footer">
+                Belum punya akun? <a href="#">Register sekarang</a>
+            </div>
+
+            <div class="status-badge">
+                <div class="status-dot"></div>
+                Secure Authentication Active
+            </div>
+        </div>
+
+        <!-- Contact Section -->
+        <div class="contact-box">
+            <span>Contact Us</span>
+            <div class="social-icons">
+                <a href="https://t.me/mrwhy016" target="_blank" class="icon-circle" title="Telegram">
+                    <i class="fa-paper-plane fas"></i>
+                </a>
+                <a href="https://www.tiktok.com/@wildan,aj,bre" target="_blank" class="icon-circle" title="TikTok">
+                    <i class="fa-brands fa-tiktok"></i>
+                </a>
+            </div>
+            <div class="copyright">
+                &copy; 2026 Whydie Pall
+            </div>
+        </div>
+
+    </div>
+
 </body>
-                               </html>
+</html>
