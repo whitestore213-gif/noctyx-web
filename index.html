@@ -1,141 +1,130 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>WHYDIE PALL V1.0 — Report Panel Access</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="style.css">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>WHYDIE PALL V1.0 — Report Panel Access</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-    <!-- BACKGROUND -->
-    <div class="bg-layer"></div>
+<div class="bg-layer"></div>
 
-    <!-- AUTH CONTAINER -->
-    <div class="auth-wrapper" id="authWrapper">
-        <div class="auth-box">
+<div class="auth-wrapper" id="authWrapper">
+  <div class="auth-box">
 
-            <!-- HEADER -->
-            <div class="auth-header">
-                <div class="auth-icon">
-                    <img src="https://i.imgur.com/8QpXq9A.png" alt="icon" onerror="this.style.display='none'">
-                </div>
-                <h1>WHYDIE PALL <span class="ver">V1.0</span></h1>
-                <p>Report Panel Access</p>
-            </div>
-
-            <!-- TABS -->
-            <div class="auth-tabs">
-                <button class="auth-tab active" data-tab="login">LOGIN</button>
-                <button class="auth-tab" data-tab="register">REGISTER</button>
-            </div>
-
-            <!-- LOGIN FORM -->
-            <form class="auth-form active" id="loginForm">
-                <div class="form-group">
-                    <label>USERNAME</label>
-                    <input type="text" id="loginUsername" placeholder="Masukkan username" autocomplete="off">
-                </div>
-                <div class="form-group">
-                    <label>PASSWORD</label>
-                    <input type="password" id="loginPassword" placeholder="Masukkan password">
-                </div>
-                <div class="form-group">
-                    <label>CAPTCHA</label>
-                    <div class="captcha-box">
-                        <span class="captcha-text" id="loginCaptchaCode">----</span>
-                        <button type="button" class="captcha-refresh" id="loginCaptchaRefresh">↻</button>
-                    </div>
-                    <input type="text" id="loginCaptcha" placeholder="Ketik captcha di atas" maxlength="4" autocomplete="off">
-                </div>
-                <div class="error-msg" id="loginError"></div>
-                <button type="submit" class="btn-primary">LOGIN</button>
-                <p class="switch-link">Belum punya akun? <a href="#" id="toRegister">Register di sini</a></p>
-            </form>
-
-            <!-- REGISTER FORM -->
-            <form class="auth-form" id="registerForm">
-                <div class="form-group">
-                    <label>USERNAME</label>
-                    <input type="text" id="regUsername" placeholder="Masukkan username" autocomplete="off">
-                </div>
-                <div class="form-group">
-                    <label>EMAIL</label>
-                    <input type="email" id="regEmail" placeholder="Masukkan email" autocomplete="off">
-                </div>
-                <div class="form-group">
-                    <label>PASSWORD</label>
-                    <input type="password" id="regPassword" placeholder="Minimal 6 karakter">
-                </div>
-                <div class="form-group">
-                    <label>KONFIRMASI PASSWORD</label>
-                    <input type="password" id="regPassword2" placeholder="Ulangi password">
-                </div>
-                <div class="form-group">
-                    <label>CAPTCHA</label>
-                    <div class="captcha-box">
-                        <span class="captcha-text" id="regCaptchaCode">----</span>
-                        <button type="button" class="captcha-refresh" id="regCaptchaRefresh">↻</button>
-                    </div>
-                    <input type="text" id="regCaptcha" placeholder="Ketik captcha di atas" maxlength="4" autocomplete="off">
-                </div>
-                <div class="error-msg" id="regError"></div>
-                <button type="submit" class="btn-primary">REGISTER</button>
-                <p class="switch-link">Sudah punya akun? <a href="#" id="toLogin">Login di sini</a></p>
-            </form>
-
-            <!-- FOOTER -->
-            <div class="auth-footer">
-                <p>© 2026 Whydie Pall</p>
-                <div class="contact-links">
-                    <a href="https://t.me/mrwhy016" target="_blank">Telegram</a>
-                    <a href="#" target="_blank">TikTok</a>
-                </div>
-            </div>
-
-        </div>
+    <div class="auth-header">
+      <div class="auth-icon">◆</div>
+      <h1>WHYDIE PALL <span class="ver">V1.0</span></h1>
+      <p>Report Panel Access</p>
     </div>
 
-    <!-- DASHBOARD (muncul setelah login) -->
-    <div class="dashboard" id="dashboard" style="display:none;">
-        <div class="dash-header">
-            <h2>WHYDIE PALL PANEL</h2>
-            <p>Selamat Datang, <span id="userName">User</span>!</p>
-            <button id="logoutBtn" class="btn-logout">LOGOUT</button>
-        </div>
-        <div class="dash-stats">
-            <div class="stat-card">
-                <span class="stat-label">STATUS</span>
-                <span class="stat-value active">Active</span>
-            </div>
-            <div class="stat-card">
-                <span class="stat-label">TOTAL REPORT</span>
-                <span class="stat-value" id="totalReport">0</span>
-            </div>
-        </div>
-        <div class="dash-form">
-            <div class="form-group">
-                <label>TARGET ACCOUNT / URL</label>
-                <input type="text" id="targetUrl" placeholder="https://tiktok.com/@target">
-            </div>
-            <div class="form-group">
-                <label>REPORT CATEGORY</label>
-                <select id="reportCategory">
-                    <option value="spam">Spam / Fake Account</option>
-                    <option value="harassment">Harassment / Bullying</option>
-                    <option value="hate">Hate Speech</option>
-                    <option value="violence">Violence / Dangerous</option>
-                    <option value="scam">Scam / Fraud</option>
-                </select>
-            </div>
-            <button id="sendReportBtn" class="btn-primary">SEND REPORT</button>
-        </div>
+    <div class="auth-tabs">
+      <button class="auth-tab active" data-tab="login">LOGIN</button>
+      <button class="auth-tab" data-tab="register">REGISTER</button>
     </div>
 
-    <!-- TOAST -->
-    <div class="toast" id="toast"></div>
+    <form class="auth-form active" id="loginForm">
+      <div class="form-group">
+        <label>USERNAME</label>
+        <input type="text" id="loginUsername" placeholder="Masukkan username" autocomplete="off">
+      </div>
+      <div class="form-group">
+        <label>PASSWORD</label>
+        <input type="password" id="loginPassword" placeholder="Masukkan password">
+      </div>
+      <div class="form-group">
+        <label>CAPTCHA</label>
+        <div class="captcha-box">
+          <span class="captcha-text" id="loginCaptchaCode">----</span>
+          <button type="button" class="captcha-refresh" id="loginCaptchaRefresh">↻</button>
+        </div>
+        <input type="text" id="loginCaptcha" placeholder="Ketik captcha di atas" maxlength="4" autocomplete="off">
+      </div>
+      <div class="error-msg" id="loginError"></div>
+      <button type="submit" class="btn-primary">LOGIN</button>
+      <p class="switch-link">Belum punya akun? <a href="#" id="toRegister">Register di sini</a></p>
+    </form>
 
-    <script src="script.js"></script>
+    <form class="auth-form" id="registerForm">
+      <div class="form-group">
+        <label>USERNAME</label>
+        <input type="text" id="regUsername" placeholder="Masukkan username" autocomplete="off">
+      </div>
+      <div class="form-group">
+        <label>EMAIL</label>
+        <input type="email" id="regEmail" placeholder="Masukkan email" autocomplete="off">
+      </div>
+      <div class="form-group">
+        <label>PASSWORD</label>
+        <input type="password" id="regPassword" placeholder="Minimal 6 karakter">
+      </div>
+      <div class="form-group">
+        <label>KONFIRMASI PASSWORD</label>
+        <input type="password" id="regPassword2" placeholder="Ulangi password">
+      </div>
+      <div class="form-group">
+        <label>CAPTCHA</label>
+        <div class="captcha-box">
+          <span class="captcha-text" id="regCaptchaCode">----</span>
+          <button type="button" class="captcha-refresh" id="regCaptchaRefresh">↻</button>
+        </div>
+        <input type="text" id="regCaptcha" placeholder="Ketik captcha di atas" maxlength="4" autocomplete="off">
+      </div>
+      <div class="error-msg" id="regError"></div>
+      <button type="submit" class="btn-primary">REGISTER</button>
+      <p class="switch-link">Sudah punya akun? <a href="#" id="toLogin">Login di sini</a></p>
+    </form>
+
+    <div class="auth-footer">
+      <p>© 2026 Whydie Pall</p>
+      <div class="contact-links">
+        <a href="https://t.me/mrwhy016" target="_blank">Telegram</a>
+        <a href="#" target="_blank">TikTok</a>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<div class="dashboard" id="dashboard" style="display:none;">
+  <div class="dash-header">
+    <h2>WHYDIE PALL PANEL</h2>
+    <p>Selamat Datang, <span id="userName">User</span>!</p>
+    <button id="logoutBtn" class="btn-logout">LOGOUT</button>
+  </div>
+  <div class="dash-stats">
+    <div class="stat-card">
+      <span class="stat-label">STATUS</span>
+      <span class="stat-value active">Active</span>
+    </div>
+    <div class="stat-card">
+      <span class="stat-label">TOTAL REPORT</span>
+      <span class="stat-value" id="totalReport">0</span>
+    </div>
+  </div>
+  <div class="dash-form">
+    <div class="form-group">
+      <label>TARGET ACCOUNT / URL</label>
+      <input type="text" id="targetUrl" placeholder="https://tiktok.com/@target">
+    </div>
+    <div class="form-group">
+      <label>REPORT CATEGORY</label>
+      <select id="reportCategory">
+        <option value="spam">Spam / Fake Account</option>
+        <option value="harassment">Harassment / Bullying</option>
+        <option value="hate">Hate Speech</option>
+        <option value="violence">Violence / Dangerous</option>
+        <option value="scam">Scam / Fraud</option>
+      </select>
+    </div>
+    <button id="sendReportBtn" class="btn-primary">SEND REPORT</button>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script src="script.js"></script>
 </body>
-</html>
+    </html>
