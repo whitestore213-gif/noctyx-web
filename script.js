@@ -1,177 +1,449 @@
-// ==================== STATE ====================
-let currentUser = null;
-let loginCaptchaText = '';
-let regCaptchaText = '';
-let totalReports = 128; // contoh angka awal
+const $ = id => document.getElementById(id);
+const toastEl = $('toast');
 
-// ==================== ELEMEN ====================
-const authWrapper = document.getElementById('authWrapper');
-const dashboard = document.getElementById('dashboard');
-const toast = document.getElementById('toast');
+let currentUser = null;
+let loginCap = '', regCap = '';
+
+// ==================== STORAGE ====================
+function getUsers() {
+  try { return JSON.parse(localStorage.getItem('wp_users') || '{}'); }
+  catch { return {}; }
+}
+function saveUsers(u) { localStorage.setItem('wp_users', JSON.stringify(u)); }
+function saveSession(s) { localStorage.setItem('wp_session', s); }
+function getSession() { return localStorage.getItem('wp_session'); }
+function clearSession() { localStorage.removeItem('wp_session'); }
 
 // ==================== CAPTCHA ====================
-function generateCaptcha() {
-    const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
-    let code = '';
-    for (let i = 0; i < 4; i++) {
-        code += chars.charAt(Math.floor(Math.random() * chars.length));
-    }
-    return code;
+function genCap() {
+  const c = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
+  let k = '';
+  for (let i = 0; i < 4; i++) k += c[Math.floor(Math.random() * c.length)];
+  return k;
 }
-
-function initCaptcha() {
-    loginCaptchaText = generateCaptcha();
-    regCaptchaText = generateCaptcha();
-    document.getElementById('loginCaptchaCode').textContent = loginCaptchaText;
-    document.getElementById('regCaptchaCode').textContent = regCaptchaText;
-    document.getElementById('loginCaptcha').value = '';
-    document.getElementById('regCaptcha').value = '';
+function initCap() {
+  loginCap = genCap(); regCap = genCap();
+  $('loginCaptchaText').textContent = loginCap;
+  $('regCaptchaText').textContent = regCap;
+  $('loginCaptcha').value = ''; $('regCaptcha').value = '';
 }
-
-// ==================== TAB SWITCH ====================
-document.querySelectorAll('.auth-tab').forEach(tab => {
-    tab.addEventListener('click', () => {
-        const target = tab.dataset.tab;
-        document.querySelectorAll('.auth-tab').forEach(t => t.classList.remove('active'));
-        document.querySelectorAll('.auth-form').forEach(f => f.classList.remove('active'));
-        tab.classList.add('active');
-        document.getElementById(target + 'Form').classList.add('active');
-        initCaptcha();
-    });
-});
-
-document.getElementById('toRegister').addEventListener('click', (e) => {
-    e.preventDefault();
-    document.querySelector('[data-tab="register"]').click();
-});
-
-document.getElementById('toLogin').addEventListener('click', (e) => {
-    e.preventDefault();
-    document.querySelector('[data-tab="login"]').click();
-});
-
-// ==================== CAPTCHA REFRESH ====================
-document.getElementById('loginCaptchaRefresh').addEventListener('click', () => {
-    loginCaptchaText = generateCaptcha();
-    document.getElementById('loginCaptchaCode').textContent = loginCaptchaText;
-    document.getElementById('loginCaptcha').value = '';
-});
-
-document.getElementById('regCaptchaRefresh').addEventListener('click', () => {
-    regCaptchaText = generateCaptcha();
-    document.getElementById('regCaptchaCode').textContent = regCaptchaText;
-    document.getElementById('regCaptcha').value = '';
-});
 
 // ==================== TOAST ====================
-function showToast(msg, type = 'success') {
-    toast.textContent = msg;
-    toast.className = 'toast show ' + type;
-    setTimeout(() => toast.className = 'toast', 3000);
+function toast(msg, type = 'success') {
+  toastEl.textContent = msg;
+  toastEl.className = 'toast show ' + type;
+  setTimeout(() => toastEl.className = 'toast', 3000);
 }
 
-// ==================== ERROR ====================
-function showError(id, msg) {
-    const el = document.getElementById(id);
-    el.textContent = msg;
-    el.classList.add('show');
-    setTimeout(() => el.classList.remove('show'), 4000);
+// ==================== LOG ====================
+function addLog(msg, type = 'info') {
+  const box = $('consoleBody');
+  if (!box) return;
+  const line = document.createElement('div');
+  line.className = 'log ' + type;
+  line.textContent = `[${new Date().toLocaleTimeString('id-ID')}] ${msg}`;
+  box.appendChild(line);
+  box.scrollTop = box.scrollHeight;
+}
+
+// ==================== MODAL ====================
+$('showLogin').onclick = () => { initCap(); $('loginModal').classList.add('active'); };
+$('showRegister').onclick = () => { initCap(); $('registerModal').classList.add('active'); };
+document.querySelectorAll('.modal-close, [data-close]').forEach(b => {
+  b.onclick = () => b.closest('.modal').classList.remove('active');
+});
+document.querySelectorAll('.modal').forEach(m => {
+  m.addEventListener('click', e => { if (e.target === m) m.classList.remove('active'); });
+});
+document.querySelectorAll('.captcha-refresh').forEach(b => {
+  b.onclick = () => {
+    const target = b.dataset.refresh;
+    const newCap = genCap();
+    if (target === 'loginCaptchaText') { loginCap = newCap; $('loginCaptchaText').textContent = newCap; $('loginCaptcha').value = ''; }
+    else { regCap = newCap; $('regCaptchaText').textContent = newCap; $('regCaptcha').value = ''; }
+  };
+});
+
+function showErr(id, msg) {
+  const el = $(id);
+  el.textContent = '⚠ ' + msg;
+  el.classList.add('show');
+  setTimeout(() => el.classList.remove('show'), 4000);
 }
 
 // ==================== REGISTER ====================
-document.getElementById('registerForm').addEventListener('submit', (e) => {
-    e.preventDefault();
+$('doRegister').onclick = () => {
+  const u = $('regUsername').value.trim();
+  const em = $('regEmail').value.trim();
+  const p = $('regPassword').value;
+  const p2 = $('regPassword2').value;
+  const c = $('regCaptcha').value.trim().toUpperCase();
 
-    const username = document.getElementById('regUsername').value.trim();
-    const email = document.getElementById('regEmail').value.trim();
-    const password = document.getElementById('regPassword').value;
-    const password2 = document.getElementById('regPassword2').value;
-    const captcha = document.getElementById('regCaptcha').value.trim().toUpperCase();
+  if (u.length < 3) return showErr('regError', 'Username minimal 3 karakter');
+  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(em)) return showErr('regError', 'Email tidak valid');
+  if (p.length < 6) return showErr('regError', 'Password minimal 6 karakter');
+  if (p !== p2) return showErr('regError', 'Konfirmasi password tidak cocok');
+  if (c !== regCap) { showErr('regError', 'Captcha salah'); initCap(); return; }
 
-    if (username.length < 3) return showError('regError', 'Username minimal 3 karakter!');
-    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) return showError('regError', 'Email tidak valid!');
-    if (password.length < 6) return showError('regError', 'Password minimal 6 karakter!');
-    if (password !== password2) return showError('regError', 'Konfirmasi password tidak cocok!');
-    if (captcha !== regCaptchaText) {
-        showError('regError', 'Captcha salah! Coba lagi.');
-        initCaptcha();
-        return;
-    }
+  const users = getUsers();
+  if (users[u]) return showErr('regError', 'Username sudah terdaftar');
 
-    // Simpan user ke localStorage
-    const users = JSON.parse(localStorage.getItem('whydie_users') || '{}');
-    if (users[username]) return showError('regError', 'Username sudah terdaftar!');
-
-    users[username] = { username, email, password: btoa(password) };
-    localStorage.setItem('whydie_users', JSON.stringify(users));
-
-    showToast('Register berhasil! Silakan login.');
-    document.querySelector('[data-tab="login"]').click();
-    document.getElementById('loginUsername').value = username;
-    document.getElementById('loginPassword').value = '';
-});
+  users[u] = {
+    id: Date.now(),
+    username: u,
+    email: em,
+    password: btoa(p),
+    role: 'USER',
+    limit: 5,
+    emails: [],
+    reportsSent: 0,
+    joinedAt: new Date().toISOString()
+  };
+  saveUsers(users);
+  toast('Register berhasil! Silakan login');
+  $('registerModal').classList.remove('active');
+  $('loginModal').classList.add('active');
+  $('loginUsername').value = u;
+};
 
 // ==================== LOGIN ====================
-document.getElementById('loginForm').addEventListener('submit', (e) => {
-    e.preventDefault();
+$('doLogin').onclick = () => {
+  const u = $('loginUsername').value.trim();
+  const p = $('loginPassword').value;
+  const c = $('loginCaptcha').value.trim().toUpperCase();
 
-    const username = document.getElementById('loginUsername').value.trim();
-    const password = document.getElementById('loginPassword').value;
-    const captcha = document.getElementById('loginCaptcha').value.trim().toUpperCase();
+  if (!u || !p) return showErr('loginError', 'Isi username & password');
+  if (c !== loginCap) { showErr('loginError', 'Captcha salah'); initCap(); return; }
 
-    if (captcha !== loginCaptchaText) {
-        showError('loginError', 'Captcha salah! Coba lagi.');
-        initCaptcha();
-        return;
-    }
-
-    // Akun owner default
-    if (username === 'whydie' && password === 'nailong213') {
-        currentUser = { username: 'whydie', role: 'owner' };
-        showToast('Selamat datang, Owner!');
-        showDashboard();
-        return;
-    }
-
-    // Cek user terdaftar
-    const users = JSON.parse(localStorage.getItem('whydie_users') || '{}');
-    const user = users[username];
-
-    if (!user) return showError('loginError', 'Akun tidak ditemukan. Belum mendaftar? Register sekarang.');
-    if (user.password !== btoa(password)) return showError('loginError', 'Password salah!');
-
-    currentUser = user;
-    showToast('Login berhasil!');
+  // Owner default
+  if (u === 'whydie' && p === 'nailong213') {
+    currentUser = {
+      id: 'OWNER-' + Date.now(),
+      username: 'whydie',
+      email: 'owner@whydie.local',
+      role: 'OWNER',
+      limit: 9999,
+      emails: [],
+      reportsSent: 0,
+      joinedAt: new Date().toISOString(),
+      isOwner: true
+    };
+    saveSession('__OWNER__');
+    toast('Selamat datang, Owner!');
     showDashboard();
-});
+    return;
+  }
+
+  const users = getUsers();
+  const user = users[u];
+  if (!user) return showErr('loginError', 'Akun tidak ditemukan. Belum mendaftar? Register sekarang.');
+  if (user.password !== btoa(p)) return showErr('loginError', 'Password salah');
+
+  currentUser = user;
+  saveSession(u);
+  toast('Login berhasil');
+  showDashboard();
+};
+
+// ==================== LOGOUT ====================
+$('logoutBtn').onclick = () => {
+  clearSession();
+  currentUser = null;
+  $('dashView').style.display = 'none';
+  $('authView').style.display = 'flex';
+  initCap();
+};
 
 // ==================== DASHBOARD ====================
-function showDashboard() {
-    authWrapper.style.display = 'none';
-    dashboard.style.display = 'block';
-    document.getElementById('userName').textContent = currentUser.username;
-    document.getElementById('totalReport').textContent = totalReports;
+function saveCurrentUser() {
+  if (currentUser.isOwner) return;
+  const users = getUsers();
+  users[currentUser.username] = currentUser;
+  saveUsers(users);
 }
 
-document.getElementById('logoutBtn').addEventListener('click', () => {
-    currentUser = null;
-    dashboard.style.display = 'none';
-    authWrapper.style.display = 'flex';
-    initCaptcha();
-    document.getElementById('loginForm').reset();
-    document.getElementById('registerForm').reset();
-    showToast('Logout berhasil.');
+function showDashboard() {
+  $('authView').style.display = 'none';
+  $('dashView').style.display = 'flex';
+  $('dashUser').textContent = currentUser.username;
+  $('dashId').textContent = currentUser.id;
+  $('dashRole').textContent = currentUser.role;
+  $('dashReport').textContent = (currentUser.reportsSent || 0) + ' email';
+  $('dashEmail').textContent = (currentUser.emails?.length || 0) + ' terdaftar';
+  $('dashLimit').textContent = currentUser.isOwner ? '∞' : currentUser.limit + '/5';
+  renderWorkspace('home');
+}
+
+// ==================== MENU ====================
+document.querySelectorAll('.menu-btn').forEach(b => {
+  b.onclick = () => renderWorkspace(b.dataset.menu);
 });
+
+function renderWorkspace(menu) {
+  const ws = $('workspace');
+  switch (menu) {
+    case 'home':
+      ws.innerHTML = '<div class="ws-placeholder"><div class="ws-icon">◇</div><p>Pilih menu di atas untuk memulai</p></div>';
+      break;
+
+    case 'gmail': {
+      let list = currentUser.emails.length
+        ? `<div class="info-row" style="display:block;margin-bottom:10px"><div style="font-size:11px;color:var(--cyan);margin-bottom:6px">📮 EMAIL TERDAFTAR:</div>${currentUser.emails.map((e, i) => `<div style="font-size:12px;padding:4px 0;word-break:break-all">${i + 1}. ${e.email}</div>`).join('')}</div>`
+        : '<div class="info-row" style="display:block;margin-bottom:10px;font-size:12px;color:var(--dim)">📭 Belum ada email terdaftar.</div>';
+
+      ws.innerHTML = `
+        <div class="form-group"><label>GMAIL MANAGER</label>
+          <div style="font-size:11px;color:var(--dim);line-height:1.7;padding:10px;background:var(--input);border-radius:8px;margin-bottom:10px">
+            Format: <b style="color:var(--cyan)">email@gmail.com|app_password</b><br>
+            App password 16 digit dari Google Account → Security → App Passwords.<br>
+            Setiap email baru = <b style="color:var(--green)">+5 limit report</b>
+          </div>
+        </div>
+        ${list}
+        <div class="form-group"><label>EMAIL & APP PASSWORD</label>
+          <input type="text" id="gmailInput" placeholder="email@gmail.com|abcdefghijklmnop">
+        </div>
+        <button class="btn-main solid" id="addGmailBtn">TAMBAH EMAIL</button>
+        <button class="btn-outline" id="clearEmailsBtn" style="margin-top:8px">HAPUS SEMUA EMAIL</button>
+      `;
+      $('addGmailBtn').onclick = addGmail;
+      $('clearEmailsBtn').onclick = () => {
+        if (!confirm('Hapus semua email?')) return;
+        currentUser.emails = [];
+        saveCurrentUser();
+        toast('Semua email dihapus');
+        renderWorkspace('gmail');
+        updateDash();
+      };
+      break;
+    }
+
+    case 'report': {
+      if (!currentUser.emails.length) {
+        ws.innerHTML = '<div class="info-row" style="display:block;color:var(--red);border-color:rgba(239,68,68,.3)">❌ Belum ada sender email. Tambah di Gmail Manager dulu.</div>';
+        return;
+      }
+      ws.innerHTML = `
+        <div class="form-group"><label>GAS REPORT</label>
+          <div style="font-size:11px;color:var(--dim);line-height:1.7;padding:10px;background:var(--input);border-radius:8px;margin-bottom:10px">
+            Kirim report ke banyak email tujuan. Pisahkan dengan koma atau enter.
+          </div>
+        </div>
+        <div class="form-group"><label>EMAIL TUJUAN</label>
+          <textarea id="targetEmails" placeholder="report1@gmail.com, report2@gmail.com"></textarea>
+        </div>
+        <div class="form-group"><label>SUBJECT</label>
+          <input type="text" id="subjectInput" placeholder="Report — Fake Account">
+        </div>
+        <div class="form-group"><label>ISI PESAN</label>
+          <textarea id="messageInput" placeholder="Tulis isi report..."></textarea>
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+          <div class="form-group"><label>KIRIM PER EMAIL</label><input type="number" id="countInput" value="3" min="1" max="50"></div>
+          <div class="form-group"><label>DELAY (detik)</label><input type="number" id="delayInput" value="2" min="1" max="10"></div>
+        </div>
+        <button class="btn-main solid" id="sendReportBtn">SEND REPORT</button>
+      `;
+      $('sendReportBtn').onclick = sendReport;
+      break;
+    }
+
+    case 'progress':
+      ws.innerHTML = `
+        <div class="form-group"><label>PROGRESS REPORT</label>
+          <div style="font-size:12px;line-height:2;padding:12px;background:var(--input);border-radius:8px">
+            <b>User:</b> ${currentUser.username}<br>
+            <b>Report Terkirim:</b> ${currentUser.reportsSent || 0}<br>
+            <b>Email Terdaftar:</b> ${currentUser.emails.length}<br>
+            <b>Limit:</b> ${currentUser.isOwner ? '∞' : currentUser.limit}<br>
+            <b>Role:</b> ${currentUser.role}
+          </div>
+        </div>`;
+      break;
+
+    case 'stats':
+      ws.innerHTML = `
+        <div class="form-group"><label>STATISTIK EMAIL</label>
+          <div style="font-size:12px;line-height:2;padding:12px;background:var(--input);border-radius:8px">
+            <b>Total Email:</b> ${currentUser.emails.length}<br>
+            <b>Total Report:</b> ${currentUser.reportsSent || 0}<br>
+            <b>Limit:</b> ${currentUser.isOwner ? '∞' : currentUser.limit}<br>
+            <b>Bergabung:</b> ${new Date(currentUser.joinedAt).toLocaleString('id-ID')}
+          </div>
+        </div>`;
+      break;
+
+    case 'session':
+      ws.innerHTML = `
+        <div class="form-group"><label>SESSION</label>
+          <div style="font-size:12px;line-height:2;padding:12px;background:var(--input);border-radius:8px;word-break:break-all">
+            <b>ID:</b> ${currentUser.id}<br>
+            <b>Username:</b> ${currentUser.username}<br>
+            <b>Email:</b> ${currentUser.email}<br>
+            <b>Status:</b> <span style="color:var(--green)">Aktif</span>
+          </div>
+        </div>`;
+      break;
+
+    case 'role':
+      ws.innerHTML = `
+        <div class="form-group"><label>UP ROLE</label>
+          <div style="font-size:12px;line-height:2;padding:12px;background:var(--input);border-radius:8px">
+            <b>Role lo:</b> ${currentUser.role}<br><br>
+            USER → VIP : Rp 10.000<br>
+            VIP → PREMIUM : Rp 25.000<br>
+            PREMIUM → OWNER : Rp 100.000<br><br>
+            Chat owner untuk upgrade.
+          </div>
+        </div>`;
+      break;
+
+    case 'limit':
+      ws.innerHTML = `
+        <div class="form-group"><label>MY LIMIT</label>
+          <div style="font-size:12px;line-height:2;padding:12px;background:var(--input);border-radius:8px">
+            <b>Limit Tersisa:</b> ${currentUser.isOwner ? '∞' : currentUser.limit}<br>
+            <b>Email Terdaftar:</b> ${currentUser.emails.length}<br><br>
+            Setiap email baru = +5 limit
+          </div>
+        </div>`;
+      break;
+
+    case 'donasi':
+      ws.innerHTML = `
+        <div class="form-group"><label>DONASI</label>
+          <div style="font-size:12px;line-height:2;padding:12px;background:var(--input);border-radius:8px">
+            Support biar terus berkembang:<br>
+            <a href="https://saweria.co/why01" target="_blank" style="color:var(--cyan)">saweria.co/why01</a>
+          </div>
+        </div>`;
+      break;
+
+    case 'qris':
+      ws.innerHTML = `
+        <div class="form-group"><label>QRIS PAYMENT</label>
+          <div style="padding:12px;background:var(--input);border-radius:8px;text-align:center">
+            <img src="https://cdn.phototourl.com/free/2026-07-29-adadf748-ac85-4e5d-a25f-f98daf590771.png" style="max-width:220px;background:#fff;padding:6px;border-radius:8px" onerror="this.style.display='none'">
+            <p style="font-size:11px;color:var(--dim);margin-top:8px">Scan QRIS untuk donasi</p>
+          </div>
+        </div>`;
+      break;
+
+    case 'owner':
+      ws.innerHTML = `
+        <div class="form-group"><label>CHAT OWNER</label>
+          <div style="font-size:12px;line-height:2;padding:12px;background:var(--input);border-radius:8px">
+            Telegram: <a href="https://t.me/mrwhy016" target="_blank" style="color:var(--cyan)">@mrwhy016</a>
+          </div>
+        </div>`;
+      break;
+  }
+}
+
+function updateDash() {
+  $('dashReport').textContent = (currentUser.reportsSent || 0) + ' email';
+  $('dashEmail').textContent = (currentUser.emails?.length || 0) + ' terdaftar';
+  $('dashLimit').textContent = currentUser.isOwner ? '∞' : currentUser.limit + '/5';
+}
+
+// ==================== ADD GMAIL ====================
+function addGmail() {
+  const input = $('gmailInput').value.trim();
+  const parts = input.split('|');
+  if (parts.length !== 2) return toast('Format salah: email|app_password', 'error');
+  const [email, appPass] = parts.map(s => s.trim());
+  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) return toast('Email tidak valid', 'error');
+  if (appPass.length !== 16) return toast('App password harus 16 digit', 'error');
+  if (currentUser.emails.find(e => e.email === email)) return toast('Email sudah terdaftar', 'error');
+
+  currentUser.emails.push({ email, appPassword: appPass });
+  currentUser.limit += 5;
+  saveCurrentUser();
+  updateDash();
+  toast('Email ditambahkan! +5 limit');
+  renderWorkspace('gmail');
+}
 
 // ==================== SEND REPORT ====================
-document.getElementById('sendReportBtn').addEventListener('click', () => {
-    const target = document.getElementById('targetUrl').value.trim();
-    if (!target) return showToast('Masukkan target URL dulu!', 'error');
+async function sendReport() {
+  const raw = $('targetEmails').value.trim();
+  const subj = $('subjectInput').value.trim();
+  const msg = $('messageInput').value.trim();
+  const cnt = parseInt($('countInput').value);
+  const dly = parseInt($('delayInput').value) * 1000;
 
-    totalReports++;
-    document.getElementById('totalReport').textContent = totalReports;
-    showToast('Report terkirim! Total: ' + totalReports);
-});
+  if (!raw || !subj || !msg) return toast('Isi semua field!', 'error');
+
+  const targets = raw.split(/[\s,;\n]+/).map(s => s.trim()).filter(Boolean);
+  const valid = targets.filter(e => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(e));
+  if (!valid.length) return toast('Tidak ada email valid', 'error');
+
+  const btn = $('sendReportBtn');
+  btn.disabled = true; btn.textContent = 'MENGIRIM...';
+
+  addLog(`Mulai report: ${valid.length} target × ${cnt}x`, 'info');
+  let ok = 0, fail = 0;
+
+  for (let t = 0; t < valid.length; t++) {
+    for (let i = 0; i < cnt; i++) {
+      const sender = currentUser.emails[i % currentUser.emails.length];
+      try {
+        const r = await fetch('/api/send', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            senderEmail: sender.email,
+            appPassword: sender.appPassword,
+            targetEmail: valid[t],
+            subject: subj,
+            message: msg
+          })
+        });
+        const ct = r.headers.get('content-type');
+        if (!ct || !ct.includes('json')) throw new Error('Server error ' + r.status);
+        const d = await r.json();
+        if (d.success) { ok++; addLog(`OK → ${valid[t]}`, 'success'); }
+        else { fail++; addLog(`GAGAL → ${d.error}`, 'failed'); }
+      } catch (e) {
+        fail++;
+        addLog(`ERROR: ${e.message}`, 'failed');
+      }
+      if (i < cnt - 1) await new Promise(r => setTimeout(r, dly));
+    }
+    if (t < valid.length - 1) await new Promise(r => setTimeout(r, dly));
+  }
+
+  currentUser.reportsSent = (currentUser.reportsSent || 0) + ok;
+  saveCurrentUser();
+  updateDash();
+
+  btn.disabled = false; btn.textContent = 'SEND REPORT';
+  addLog(`SELESAI: ${ok} sukses, ${fail} gagal`, 'info');
+  toast(`Selesai! ${ok} terkirim`);
+}
+
+$('clearLog').onclick = () => { $('consoleBody').innerHTML = ''; addLog('Console cleared'); };
 
 // ==================== INIT ====================
-initCaptcha();
+initCap();
+const session = getSession();
+if (session === '__OWNER__') {
+  currentUser = {
+    id: 'OWNER-' + Date.now(),
+    username: 'whydie',
+    email: 'owner@whydie.local',
+    role: 'OWNER',
+    limit: 9999,
+    emails: [],
+    reportsSent: 0,
+    joinedAt: new Date().toISOString(),
+    isOwner: true
+  };
+  showDashboard();
+} else if (session) {
+  const users = getUsers();
+  if (users[session]) {
+    currentUser = users[session];
+    showDashboard();
+  } else clearSession();
+      }
