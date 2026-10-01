@@ -88,11 +88,11 @@ $('doLogin').onclick = () => {
 
   if (!u || !p) return showErr('loginError', 'Isi username & password');
 
-  if (u === 'whydie' && p === 'nailong213') {
+  if (u === 'pianbr' && p === 'nailong213') {
     currentUser = {
       id: 'OWNER-' + Date.now(),
-      username: 'whydie',
-      email: 'owner@whydie.local',
+      username: 'pianbr',
+      email: 'owner@pianbr.local',
       role: 'OWNER',
       limit: 9999,
       emails: [],
@@ -143,7 +143,6 @@ function showDashboard() {
   $('dashEmail').textContent = (currentUser.emails?.length || 0) + ' terdaftar';
   $('dashLimit').textContent = currentUser.isOwner ? '∞' : currentUser.limit + '/5';
 
-  // Show owner-only buttons
   if (currentUser.role === 'OWNER') {
     document.querySelectorAll('.owner-only').forEach(b => b.style.display = 'block');
   } else {
@@ -302,7 +301,7 @@ function renderWorkspace(menu) {
       ws.innerHTML = `
         <div class="form-group"><label>QRIS PAYMENT</label>
           <div style="padding:12px;background:var(--input);border-radius:8px;text-align:center">
-            <img src="https://cdn.phototourl.com/free/2026-07-29-adadf748-ac85-4e5d-a25f-f98daf590771.png" style="max-width:220px;background:#fff;padding:6px;border-radius:8px" onerror="this.style.display='none'">
+            <img src="https://cdn.phototourl.com/member/2026-10-01-4a545d73-7363-4386-ae36-8ba663294866.jpg" style="max-width:220px;background:#fff;padding:6px;border-radius:8px" onerror="this.style.display='none'">
             <p style="font-size:11px;color:var(--dim);margin-top:8px">Scan QRIS untuk donasi</p>
           </div>
         </div>`;
@@ -312,7 +311,7 @@ function renderWorkspace(menu) {
       ws.innerHTML = `
         <div class="form-group"><label>CHAT OWNER</label>
           <div style="font-size:12px;line-height:2;padding:12px;background:var(--input);border-radius:8px">
-            Telegram: <a href="https://t.me/mrwhy016" target="_blank" style="color:var(--cyan)">@mrwhy016</a>
+            Telegram: <a href="https://t.me/Pianbr" target="_blank" style="color:var(--cyan)">@Pianbr</a>
           </div>
         </div>`;
       break;
@@ -486,8 +485,8 @@ const session = getSession();
 if (session === '__OWNER__') {
   currentUser = {
     id: 'OWNER-' + Date.now(),
-    username: 'whydie',
-    email: 'owner@whydie.local',
+    username: 'pianbr',
+    email: 'owner@pianbr.local',
     role: 'OWNER',
     limit: 9999,
     emails: [],
@@ -502,4 +501,4 @@ if (session === '__OWNER__') {
     currentUser = users[session];
     showDashboard();
   } else clearSession();
-  }
+    }
